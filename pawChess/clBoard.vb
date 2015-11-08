@@ -60,7 +60,7 @@ Public Class clBoard
         LogPanel.BorderStyle = BorderStyle.FixedSingle
 
         Me.Controls.Add(LogPanel)
-
+        MsgBox(GamePanel.Size.ToString)
     End Sub
 
     Public Sub ResizeBoard()
