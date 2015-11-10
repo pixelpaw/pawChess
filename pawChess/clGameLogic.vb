@@ -11,8 +11,8 @@ Public Class clGameLogic
         'Board.SetFiguresStartingPositions()
     End Sub
 
-    Public Sub ResizeBoard()
-        If Board IsNot Nothing Then Board.ResizeBoard()
+    Public Sub ResizeBoard(ByVal bIsMaximized As Boolean)
+        If Board IsNot Nothing Then Board.ResizeBoard(bIsMaximized)
     End Sub
 
 End Class

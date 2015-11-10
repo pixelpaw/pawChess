@@ -89,6 +89,9 @@ Public Module mdSettings
 
 #Region "Variablen"
 
+    Public mScreenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
+    Public mScreenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
+
     Public moColor_GamePanel As Color = Color.Crimson
     Public moColor_InnerPanel As Color = Color.PaleGoldenrod
     Public moColor_CornerField As Color = Color.Moccasin  'Color.DarkSalmon
@@ -103,9 +106,14 @@ Public Module mdSettings
 
     Public mnDefaultPos As Integer = 12
 
+    'Public mnSize_Small As Integer = 20
+    'Public mnSize_Big As Integer = 40
+    'Public mnSize_LogPanel As Integer = 170
+
     Public mnSize_Small As Integer = 35
     Public mnSize_Big As Integer = 75
-    Public mnSize_LogPanel As Integer = 300
+    Public mnSize_LogPanel As Integer = 250
+    Public mnSize_LogLabel As Integer = 25
     Public mnSize_GamePanel As Integer = mnSize_Small * 2 + mnSize_Big * 8 + 2  ' + 2 durch die Border des InnerPanels
     Public mnSize_ClientSize_Width As Integer = mnSize_GamePanel + mnSize_LogPanel + (mnDefaultPos * 3)
     Public mnSize_ClientSize_Height As Integer = mnSize_GamePanel + (mnDefaultPos * 2)
