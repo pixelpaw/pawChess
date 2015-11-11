@@ -33,6 +33,112 @@ Public Class clBoard
         frmMain.Controls.Add(Me)
     End Sub
 
+    Public Function GetFieldByName(ByVal strName As String) As ucField
+        Dim oResult As ucField = Nothing
+
+        For Each oPair As KeyValuePair(Of String, ucField) In colFields
+            Dim oField As ucField = CType(oPair.Value, ucField)
+            If oField.Name = strName Then oResult = oField
+        Next
+
+        Return oResult
+    End Function
+
+    Public Function GetField(ByVal strFieldIndex As String) As ucField
+        Return Me.colFields(strFieldIndex)
+    End Function
+
+    Public Function GetField(ByVal nCol As Integer, ByVal nRow As Integer) As ucField
+        Return GetField(GetFieldIndex(nCol, nRow))
+    End Function
+
+    Public Shared Function GetFieldIndex(ByVal nCol As Integer, ByVal nRow As Integer) As String
+        Return nRow.ToString & nCol.ToString
+    End Function
+
+    Public Sub GlowOff()
+        For Each oPair As KeyValuePair(Of String, ucField) In colFields
+            CType(oPair.Value, ucField).GlowOff()
+        Next
+    End Sub
+
+    Public Sub GlowFields(ByVal oListOfFields As Generic.List(Of String), ByVal bGlowOn As Boolean, ByVal GlowMode As mdSettings.enGlowMode)
+        For Each strIndex In oListOfFields
+            GetField(strIndex).Glow(bGlowOn, GlowMode)
+        Next
+    End Sub
+
+    Public Sub GlowRow(ByVal oCurField As ucField, ByVal bGlowOn As Boolean)
+        Select Case oCurField.FieldTyp
+            Case enFieldTyp.Corner
+                Dim nColStart As Integer = oCurField.IndexCol
+                Dim nRowStart As Integer = oCurField.IndexRow
+
+                Select Case oCurField.Index
+                    Case "00", "99"
+                        For i As Integer = 0 To 9
+                            GetField(GetFieldIndex(i, i)).Glow(bGlowOn)
+                        Next
+
+                    Case "09", "90"
+                        For i As Integer = 0 To 9
+                            GetField(GetFieldIndex(9 - i, i)).Glow(bGlowOn)
+                        Next
+
+                End Select
+
+            Case enFieldTyp.MapHorizontal
+                For i As Integer = 0 To 9
+                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
+                Next
+
+            Case enFieldTyp.MapVertical
+                For i As Integer = 0 To 9
+                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
+                Next
+
+            Case enFieldTyp.Bright, enFieldTyp.Dark
+                For i As Integer = 0 To 9
+                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
+                Next
+
+                For i As Integer = 0 To 9
+                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
+                Next
+        End Select
+    End Sub
+
+    Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oLabel As Label = CType(sender, Label)
+        Dim oField As ucField = CType(oLabel.Parent, ucField)
+        RaiseEvent tmp_Field_Click(oField.IndexCol, oField.IndexRow)
+    End Sub
+
+    Public Sub Field_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oLabel As Label = CType(sender, Label)
+        Dim oField As ucField = CType(oLabel.Parent, ucField)
+
+        GlowRow(oField, True)
+
+        RaiseEvent tmp_Field_MouseEnter(oField.IndexCol, oField.IndexRow)
+    End Sub
+
+    Public Sub Field_MouseLeave(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oLabel As Label = CType(sender, Label)
+        Dim oField As ucField = CType(oLabel.Parent, ucField)
+
+        GlowRow(oField, False)
+
+        RaiseEvent tmp_Field_MouseLeave(oField.IndexCol, oField.IndexRow)
+    End Sub
+
+    Public Sub ClearLog()
+        lblPlayer.Text = ""
+        lblFieldInfo.Text = ""
+    End Sub
+
+#Region "DrawBoard"
+
     Public Sub DrawBoard()
         ' Schachfeld
         GamePanel = New Panel
@@ -160,111 +266,66 @@ Public Class clBoard
 
     End Sub
 
-    Public Function GetFieldByName(ByVal strName As String) As ucField
-        Dim oResult As ucField = Nothing
-
-        For Each oPair As KeyValuePair(Of String, ucField) In colFields
-            Dim oField As ucField = CType(oPair.Value, ucField)
-            If oField.Name = strName Then oResult = oField
+    Public Sub SetFiguresStartingPositions()
+        ' schwarze Figuren
+        ' Bauern
+        For i As Integer = 1 To 8
+            Me.colFields(GetFieldIndex(i, 2)).SetFigure(New clPawn(enPlayerColor.Black))
         Next
 
-        Return oResult
-    End Function
+        ' Türme
+        Me.colFields(GetFieldIndex(1, 1)).SetFigure(New clRook(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(8, 1)).SetFigure(New clRook(enPlayerColor.Black))
 
-    Public Function GetField(ByVal strFieldIndex As String) As ucField
-        Return Me.colFields(strFieldIndex)
-    End Function
+        ' Springer
+        Me.colFields(GetFieldIndex(2, 1)).SetFigure(New clKnight(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(7, 1)).SetFigure(New clKnight(enPlayerColor.Black))
 
-    Public Function GetField(ByVal nCol As Integer, ByVal nRow As Integer) As ucField
-        Return GetField(GetFieldIndex(nCol, nRow))
-    End Function
+        ' Läufer
+        Me.colFields(GetFieldIndex(3, 1)).SetFigure(New clBishop(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(6, 1)).SetFigure(New clBishop(enPlayerColor.Black))
 
-    Public Shared Function GetFieldIndex(ByVal nCol As Integer, ByVal nRow As Integer) As String
-        Return nRow.ToString & nCol.ToString
-    End Function
+        ' Königin
+        Me.colFields(GetFieldIndex(4, 1)).SetFigure(New clQueen(enPlayerColor.Black))
 
-    Public Sub GlowOff()
-        For Each oPair As KeyValuePair(Of String, ucField) In colFields
-            CType(oPair.Value, ucField).GlowOff()
+        ' König
+        Me.colFields(GetFieldIndex(5, 1)).SetFigure(New clKing(enPlayerColor.Black))
+
+        ' weisse Figuren
+        ' Bauern
+        For i As Integer = 1 To 8
+            Me.colFields(GetFieldIndex(i, 7)).SetFigure(New clPawn(enPlayerColor.White))
         Next
+
+        ' Türme
+        Me.colFields(GetFieldIndex(1, 8)).SetFigure(New clRook(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(8, 8)).SetFigure(New clRook(enPlayerColor.White))
+
+        ' Springer
+        Me.colFields(GetFieldIndex(2, 8)).SetFigure(New clKnight(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(7, 8)).SetFigure(New clKnight(enPlayerColor.White))
+
+        ' Läufer
+        Me.colFields(GetFieldIndex(3, 8)).SetFigure(New clBishop(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(6, 8)).SetFigure(New clBishop(enPlayerColor.White))
+
+        ' Königin
+        Me.colFields(GetFieldIndex(4, 8)).SetFigure(New clQueen(enPlayerColor.White))
+
+        ' König
+        Me.colFields(GetFieldIndex(5, 8)).SetFigure(New clKing(enPlayerColor.White))
+
     End Sub
 
-    Public Sub GlowFields(ByVal oListOfFields As Generic.List(Of String), ByVal bGlowOn As Boolean, ByVal GlowMode As mdSettings.enGlowMode)
-        For Each strIndex In oListOfFields
-            GetField(strIndex).Glow(bGlowOn, GlowMode)
-        Next
-    End Sub
+#End Region
 
-    Public Sub GlowRow(ByVal oCurField As ucField, ByVal bGlowOn As Boolean)
-        Select Case oCurField.FieldTyp
-            Case enFieldTyp.Corner
-                Dim nColStart As Integer = oCurField.IndexCol
-                Dim nRowStart As Integer = oCurField.IndexRow
-
-                Select Case oCurField.Index
-                    Case "00", "99"
-                        For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(i, i)).Glow(bGlowOn)
-                        Next
-
-                    Case "09", "90"
-                        For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(9 - i, i)).Glow(bGlowOn)
-                        Next
-
-                End Select
-
-            Case enFieldTyp.MapHorizontal
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
-                Next
-
-            Case enFieldTyp.MapVertical
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
-                Next
-
-            Case enFieldTyp.Bright, enFieldTyp.Dark
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
-                Next
-
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
-                Next
-        End Select
-    End Sub
-
-    Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oLabel As Label = CType(sender, Label)
-        Dim oField As ucField = CType(oLabel.Parent, ucField)
-        RaiseEvent tmp_Field_Click(oField.IndexCol, oField.IndexRow)
-    End Sub
-
-    Public Sub Field_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oLabel As Label = CType(sender, Label)
-        Dim oField As ucField = CType(oLabel.Parent, ucField)
-
-        GlowRow(oField, True)
-
-        RaiseEvent tmp_Field_MouseEnter(oField.IndexCol, oField.IndexRow)
-    End Sub
-
-    Public Sub Field_MouseLeave(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oLabel As Label = CType(sender, Label)
-        Dim oField As ucField = CType(oLabel.Parent, ucField)
-
-        GlowRow(oField, False)
-
-        RaiseEvent tmp_Field_MouseLeave(oField.IndexCol, oField.IndexRow)
-    End Sub
-
-#Region "Resize - ToDo"
+#Region "Resize"
 
     Public Sub ResizeBoardControls(ByVal bIsMaximized As Boolean)
         If GamePanel IsNot Nothing AndAlso LogPanel IsNot Nothing Then
-            Dim nNewSize_GamePanel As Integer = Math.Min(frmMain.ClientSize.Width, frmMain.ClientSize.Height) - mdSettings.mnDefaultPos * 2
+            Dim nNewSize_GamePanel As Integer = Math.Min(Me.Parent.ClientSize.Width, Me.Parent.ClientSize.Height) - mdSettings.mnDefaultPos * 2
             Dim nNewSize_InnerPanel As Integer = nNewSize_GamePanel - mdSettings.mnSize_Small * 2
+            Dim oNewFont As Font = mdSettings.mFigures_Font
 
             Dim nCalc As Double = (nNewSize_InnerPanel - 2) / 8
             While Not nCalc = Int(nCalc)
@@ -275,6 +336,9 @@ Public Class clBoard
 
             If bIsMaximized Then
                 Me.nFieldSize = CInt(nCalc)
+
+                Dim nSteigerung As Double = nCalc / mdSettings.mnSize_Big * 100
+                oNewFont = New Font(mdSettings.mFigures_Font.FontFamily, CInt(mdSettings.mFigures_Font.SizeInPoints / 100 * nSteigerung))
             Else
                 Me.nFieldSize = mdSettings.mnSize_Big
             End If
@@ -283,22 +347,19 @@ Public Class clBoard
             InnerPanel.Size = New Size(nNewSize_InnerPanel, nNewSize_InnerPanel)
 
             LogPanel.Size = New Size(LogPanel.Width, nNewSize_GamePanel)
-            LogPanel.Location = New Point(GamePanel.Width + mdSettings.mnDefaultPos * 2, mdSettings.mnDefaultPos)
 
             lblFieldInfo.Location = New Point(mdSettings.mnDefaultPos, LogPanel.Size.Height - mdSettings.mnSize_LogLabel - mdSettings.mnDefaultPos - 2)
 
             Me.Size = frmMain.ClientSize
 
             If bIsMaximized Then
-                Dim nX1 As Integer = CInt((mdSettings.mScreenWidth - GamePanel.Width - LogPanel.Width - mdSettings.mnDefaultPos) / 2)
-                Dim nX2 As Integer = GamePanel.Width + GamePanel.Location.X + mdSettings.mnDefaultPos
-
+                Dim nX1 As Integer = CInt((Me.Parent.ClientSize.Width - GamePanel.Width - LogPanel.Width - mdSettings.mnDefaultPos) / 2)
                 GamePanel.Location = New Point(nX1, mdSettings.mnDefaultPos)
-                LogPanel.Location = New Point(nX2, mdSettings.mnDefaultPos)
             Else
                 GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
-                LogPanel.Location = New Point(mdSettings.mnSize_GamePanel + mdSettings.mnDefaultPos * 2, mdSettings.mnDefaultPos)
             End If
+
+            LogPanel.Location = New Point(GamePanel.Width + GamePanel.Location.X + mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
 
             For Each oPair As KeyValuePair(Of String, ucField) In colFields
                 Dim oField As ucField = GetField(oPair.Key)
@@ -311,6 +372,7 @@ Public Class clBoard
                     oField.Location = New Point(nPosX, nPosY)
                     oField.Size = New Size(Me.nFieldSize, Me.nFieldSize)
                     oField.InnerField.Size = oField.Size
+                    oField.InnerField.Font = oNewFont
                 Else
                     nPosX = mdSettings.mnSize_Small * If(oField.IndexCol = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexCol - 1, 0)
                     nPosY = mdSettings.mnSize_Small * If(oField.IndexRow = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexRow - 1, 0)

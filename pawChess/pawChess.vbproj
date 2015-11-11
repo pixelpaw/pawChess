@@ -77,6 +77,12 @@
     </Compile>
     <Compile Include="clChessFigure.vb" />
     <Compile Include="clGameLogic.vb" />
+    <Compile Include="Figures\clBishop.vb" />
+    <Compile Include="Figures\clKing.vb" />
+    <Compile Include="Figures\clKnight.vb" />
+    <Compile Include="Figures\clPawn.vb" />
+    <Compile Include="Figures\clQueen.vb" />
+    <Compile Include="Figures\clRook.vb" />
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>

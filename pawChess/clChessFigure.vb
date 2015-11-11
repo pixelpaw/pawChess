@@ -8,9 +8,7 @@ Public Class clChessFigure
     Public Property FigureColored As mdSettings.enFiguresColored
     Public Property FigureID As String
     Public Property Value As Integer
-    Public Property Moves As Integer
-    Public Property MaxSteps As Integer
-    Public Property PositionIndex As String
+    Public Property MoveCounter As Integer
 
     Public Sub New()
     End Sub
