@@ -5,8 +5,8 @@ Public Class clBoard
     Inherits Panel
 
     ' Controls GameField
-    Public GamePanel As Panel = Nothing
-    Public InnerPanel As Panel = Nothing
+    Public WithEvents GamePanel As Panel = Nothing
+    Public WithEvents InnerPanel As Panel = Nothing
 
     ' Controls Log
     Public LogPanel As Panel = Nothing

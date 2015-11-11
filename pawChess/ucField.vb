@@ -7,6 +7,8 @@ Public Class ucField
     Implements INotifyPropertyChanged
 
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+    Public Delegate Sub TestChanged(ByVal col As Integer, ByVal row As Integer)
+    Public Event tmp_PropertyChanged As TestChanged
 
     Public Property InnerField As Label
     Public Property FieldTyp As mdSettings.enFieldTyp
@@ -16,6 +18,10 @@ Public Class ucField
     Public Property IsChessField As Boolean = False
     Public Property Figure As clChessFigure = Nothing
     Public Property GlowState As mdSettings.enGlowMode = enGlowMode.Off
+
+    Public Sub NotifyPropertyChanged(ByVal sender As Object, ByVal e As PropertyChangedEventArgs)
+        RaiseEvent tmp_PropertyChanged(Me.IndexCol, Me.IndexRow)
+    End Sub
 
     Public Sub New(ByVal oTyp As mdSettings.enFieldTyp)
         InitializeComponent()
@@ -58,14 +64,8 @@ Public Class ucField
         InnerField.Padding = New Padding(6, 0, 0, 0)
 
         Me.Controls.Add(InnerField)
-    End Sub
 
-    Public Sub Property_Changed(ByVal sender As Object, ByVal e As PropertyChangedEventArgs) Handles Me.PropertyChanged
-        MsgBox("check")
-    End Sub
-
-    Public Sub NotifyPropertyChanged(ByVal strProperty As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(strProperty))
+        AddHandler Me.PropertyChanged, AddressOf NotifyPropertyChanged
     End Sub
 
     Public Sub SetFigure(ByVal oFigure As clChessFigure)
