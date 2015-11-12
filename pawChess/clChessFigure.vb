@@ -9,6 +9,9 @@ Public Class clChessFigure
     Public Property FigureID As String
     Public Property Value As Integer
     Public Property MoveCounter As Integer
+    Public Property Movement As mdSettings.enFigureMovement
+    Public Property MaxSteps As Integer
+    Public Property Directions As List(Of Integer())
 
     Public Sub New()
     End Sub

@@ -16,12 +16,15 @@ Public Class clBoard
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
 
-    Public Delegate Sub FieldClickHandler(ByVal col As Integer, ByVal row As Integer)
-    Public Delegate Sub FieldGlowHandler(ByVal col As Integer, ByVal row As Integer)
+    'Public Delegate Sub FieldClickHandler(ByVal col As Integer, ByVal row As Integer)
+    'Public Delegate Sub FieldMouseMoveHandler(ByVal col As Integer, ByVal row As Integer)
+
+    Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
+    Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
 
     Public Event tmp_Field_Click As FieldClickHandler
-    Public Event tmp_Field_MouseEnter As FieldGlowHandler
-    Public Event tmp_Field_MouseLeave As FieldGlowHandler
+    Public Event tmp_Field_MouseEnter As FieldMouseMoveHandler
+    Public Event tmp_Field_MouseLeave As FieldMouseMoveHandler
 
     Dim nFieldSize As Integer
 
@@ -64,11 +67,11 @@ Public Class clBoard
 
     Public Sub GlowFields(ByVal oListOfFields As Generic.List(Of String), ByVal bGlowOn As Boolean, ByVal GlowMode As mdSettings.enGlowMode)
         For Each strIndex In oListOfFields
-            GetField(strIndex).Glow(bGlowOn, GlowMode)
+            GetField(strIndex).GlowState = GlowMode
         Next
     End Sub
 
-    Public Sub GlowRow(ByVal oCurField As ucField, ByVal bGlowOn As Boolean)
+    Public Sub GlowRow(ByVal oCurField As ucField, ByVal GlowMode As mdSettings.enGlowMode)
         Select Case oCurField.FieldTyp
             Case enFieldTyp.Corner
                 Dim nColStart As Integer = oCurField.IndexCol
@@ -77,33 +80,33 @@ Public Class clBoard
                 Select Case oCurField.Index
                     Case "00", "99"
                         For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(i, i)).Glow(bGlowOn)
+                            GetField(GetFieldIndex(i, i)).GlowState = GlowMode
                         Next
 
                     Case "09", "90"
                         For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(9 - i, i)).Glow(bGlowOn)
+                            GetField(GetFieldIndex(9 - i, i)).GlowState = GlowMode
                         Next
 
                 End Select
 
             Case enFieldTyp.MapHorizontal
                 For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
+                    GetField(GetFieldIndex(oCurField.IndexCol, i)).GlowState = GlowMode
                 Next
 
             Case enFieldTyp.MapVertical
                 For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
+                    GetField(GetFieldIndex(i, oCurField.IndexRow)).GlowState = GlowMode
                 Next
 
             Case enFieldTyp.Bright, enFieldTyp.Dark
                 For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).Glow(bGlowOn)
+                    GetField(GetFieldIndex(oCurField.IndexCol, i)).GlowState = GlowMode
                 Next
 
                 For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).Glow(bGlowOn)
+                    GetField(GetFieldIndex(i, oCurField.IndexRow)).GlowState = GlowMode
                 Next
         End Select
     End Sub
@@ -111,29 +114,28 @@ Public Class clBoard
     Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
-        RaiseEvent tmp_Field_Click(oField.IndexCol, oField.IndexRow)
+        RaiseEvent tmp_Field_Click(oField)
     End Sub
 
     Public Sub Field_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
 
-        GlowRow(oField, True)
+        'GlowRow(oField, mdSettings.enGlowMode.Neutral)
 
-        RaiseEvent tmp_Field_MouseEnter(oField.IndexCol, oField.IndexRow)
+        RaiseEvent tmp_Field_MouseEnter(oField)
     End Sub
 
     Public Sub Field_MouseLeave(ByVal sender As Object, ByVal e As EventArgs)
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
 
-        GlowRow(oField, False)
+        'GlowRow(oField, mdSettings.enGlowMode.Off)
 
-        RaiseEvent tmp_Field_MouseLeave(oField.IndexCol, oField.IndexRow)
+        RaiseEvent tmp_Field_MouseLeave(oField)
     End Sub
 
     Public Sub ClearLog()
-        lblPlayer.Text = ""
         lblFieldInfo.Text = ""
     End Sub
 

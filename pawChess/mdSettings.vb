@@ -6,6 +6,12 @@ Public Module mdSettings
 
 #Region "Enums"
 
+    Public Enum enFigureMovement
+        <Description("nach Unten")> PawnDown
+        <Description("nach Oben")> PawnUp
+        <Description("normal")> Normal
+    End Enum
+
     Public Enum enFieldTyp
         <Description("Ecke")> Corner
         <Description("Rand Horizontal")> MapHorizontal
@@ -15,15 +21,20 @@ Public Module mdSettings
     End Enum
 
     Public Enum enGlowMode
-        <Description("schlecht")> Bad
+        <Description("schlecht - Figur schlagen")> Bad
         <Description("gut")> Good
-        <Description("neutral")> Neutral
-        <Description("aus")> Off
+        <Description("neutral - normaler Zug")> Neutral
+        <Description("aus - Zug verboten")> Off
     End Enum
 
     Public Enum enPlayerColor
         <Description("Weiss")> White
         <Description("Schwarz")> Black
+    End Enum
+
+    Public Enum enPlayerType
+        <Description("Computer")> Bot
+        <Description("Mensch")> Human
     End Enum
 
     Public Enum enFigures

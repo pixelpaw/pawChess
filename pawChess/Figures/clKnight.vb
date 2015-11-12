@@ -11,6 +11,20 @@ Public Class clKnight
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
         Me.Value = 3
         Me.MoveCounter = 0
+        Me.Movement = mdSettings.enFigureMovement.Normal
+        Me.MaxSteps = 1
+
+        Dim oDirections As New List(Of Integer())
+        oDirections.Add(New Integer() {-2, -1})
+        oDirections.Add(New Integer() {-2, 1})
+        oDirections.Add(New Integer() {-1, -2})
+        oDirections.Add(New Integer() {-1, 2})
+        oDirections.Add(New Integer() {1, 2})
+        oDirections.Add(New Integer() {1, -2})
+        oDirections.Add(New Integer() {2, 1})
+        oDirections.Add(New Integer() {2, -1})
+
+        Me.Directions = oDirections
     End Sub
 
 End Class
