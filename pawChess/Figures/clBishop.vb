@@ -11,6 +11,15 @@ Public Class clBishop
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
         Me.Value = 3
         Me.MoveCounter = 0
+        Me.MaxSteps = 7
+
+        Dim ListOfDirections As New List(Of Integer())
+        ListOfDirections.Add(New Integer() {-1, -1})
+        ListOfDirections.Add(New Integer() {-1, 1})
+        ListOfDirections.Add(New Integer() {1, 1})
+        ListOfDirections.Add(New Integer() {1, -1})
+
+        Me.Directions = ListOfDirections
     End Sub
 
 End Class

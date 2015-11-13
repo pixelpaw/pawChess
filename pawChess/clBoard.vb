@@ -269,6 +269,14 @@ Public Class clBoard
     End Sub
 
     Public Sub SetFiguresStartingPositions()
+
+        Me.colFields(GetFieldIndex(4, 5)).SetFigure(New clKnight(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(3, 3)).SetFigure(New clKnight(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(2, 4)).SetFigure(New clQueen(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(8, 4)).SetFigure(New clRook(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(3, 5)).SetFigure(New clPawn(enPlayerColor.White))
+
+        Exit Sub
         ' schwarze Figuren
         ' Bauern
         For i As Integer = 1 To 8

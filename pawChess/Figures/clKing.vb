@@ -11,6 +11,19 @@ Public Class clKing
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
         Me.Value = 1
         Me.MoveCounter = 0
+        Me.MaxSteps = 1
+
+        Dim ListOfDirections As New List(Of Integer())
+        ListOfDirections.Add(New Integer() {-1, -1})
+        ListOfDirections.Add(New Integer() {-1, 0})
+        ListOfDirections.Add(New Integer() {-1, 1})
+        ListOfDirections.Add(New Integer() {0, 1})
+        ListOfDirections.Add(New Integer() {1, 1})
+        ListOfDirections.Add(New Integer() {1, 0})
+        ListOfDirections.Add(New Integer() {1, -1})
+        ListOfDirections.Add(New Integer() {0, -1})
+
+        Me.Directions = ListOfDirections
     End Sub
 
 End Class

@@ -56,17 +56,59 @@ Public Class clGameLogic
         Dim nRow As Integer = oCurrentField.IndexRow
 
         For Each nDirection As Integer() In oFigure.Directions
-            For i As Integer = 0 To oFigure.MaxSteps - 1
-                For j As Integer = 0 To oFigure.MaxSteps - 1
-                    nCol = nCol + nDirection(1) + i
-                    nRow = nRow + nDirection(0) + j
+            For i As Integer = 1 To oFigure.MaxSteps
+                nRow = oCurrentField.IndexRow + (nDirection(0) * i)
+                nCol = oCurrentField.IndexCol + (nDirection(1) * i)
 
-                    If nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8 Then Continue For
+                If nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8 Then Continue For
 
-                    Dim tmpField As ucField = Board.GetField(nCol, nRow)
+                Dim tmpField As ucField = Board.GetField(nCol, nRow)
+
+                If tmpField.Figure Is Nothing Then
+                    tmpField.GlowState = enGlowMode.Neutral
+                ElseIf tmpField.Figure.PlayerColor = CurPlayer Then
+                    tmpField.GlowState = enGlowMode.Off
+                    Exit For
+                ElseIf tmpField.Figure.PlayerColor <> CurPlayer Then
                     tmpField.GlowState = enGlowMode.Bad
-                Next
+                    Exit For
+                Else
+                    tmpField.GlowState = enGlowMode.Off
+                End If
             Next
+
+            ' Sonderregeln
+            If oFigure.Figure = enFigures.Pawn Then
+                ' einmal nach Links
+                nRow = oCurrentField.IndexRow + (nDirection(0) * oFigure.MaxSteps)
+                nCol = oCurrentField.IndexCol - 1
+
+                If Not (nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8) Then
+                    Dim tmpField As ucField = Board.GetField(nCol, nRow)
+                    If tmpField.Figure IsNot Nothing Then
+                        If tmpField.Figure.PlayerColor <> CurPlayer Then
+                            tmpField.GlowState = enGlowMode.Bad
+                        Else
+                            tmpField.GlowState = enGlowMode.Off
+                        End If
+                    End If
+                End If
+
+                ' einmal nach rechts
+                nRow = oCurrentField.IndexRow + (nDirection(0) * oFigure.MaxSteps)
+                nCol = oCurrentField.IndexCol + 1
+
+                If Not (nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8) Then
+                    Dim tmpField As ucField = Board.GetField(nCol, nRow)
+                    If tmpField.Figure IsNot Nothing Then
+                        If tmpField.Figure.PlayerColor <> CurPlayer Then
+                            tmpField.GlowState = enGlowMode.Bad
+                        Else
+                            tmpField.GlowState = enGlowMode.Off
+                        End If
+                    End If
+                End If
+            End If
         Next
 
     End Sub

@@ -13,6 +13,8 @@ Public Class clChessFigure
     Public Property MaxSteps As Integer
     Public Property Directions As List(Of Integer())
 
+    Public Property MovementRules As List(Of clMovementRule)
+
     Public Sub New()
     End Sub
 
