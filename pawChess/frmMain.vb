@@ -6,7 +6,7 @@ Public Class frmMain
     Public Game As clGameLogic = Nothing
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Text = "ppChess"
+        Me.Text = "pawChess"
         Me.ClientSize = New Size(mdSettings.mnSize_ClientSize_Width, mdSettings.mnSize_ClientSize_Height)
         Me.FormBorderStyle = FormBorderStyle.FixedSingle
         Me.Location = New Point(CInt((mdSettings.mScreenWidth - Me.Size.Width) / 4), CInt((mdSettings.mScreenHeight - Me.Size.Height) / 3))
