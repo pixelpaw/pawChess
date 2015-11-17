@@ -29,7 +29,7 @@ Public Class clBoard
     Dim nFieldSize As Integer
 
     Public Sub New()
-        Me.BackColor = Color.Transparent
+        Me.BackColor = Color.SaddleBrown
         Me.Size = frmMain.ClientSize
         Me.nFieldSize = mdSettings.mnSize_Big
 
