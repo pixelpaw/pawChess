@@ -14,15 +14,23 @@ Public Class clPawn
         Me.Movement = If(oPlayerColor = enPlayerColor.Black, enFigureMovement.PawnDown, enFigureMovement.PawnUp)
         Me.MaxSteps = 1
 
-        Dim oDirections As New List(Of Integer())
+        Dim ListOfMovementRules As New List(Of clMovementRule)
 
         If Me.Movement = enFigureMovement.PawnUp Then
-            oDirections.Add(New Integer() {-1, 0})
+            ListOfMovementRules.Add(New clMovementRule("oben", -1, 0, 1, False, False, False))
+            ListOfMovementRules.Add(New clMovementRule("Startzug oben", -1, 0, 2, False, False, True))
+            ListOfMovementRules.Add(New clMovementRule("diagonal oben links", -1, -1, 1, True, True, False))
+            ListOfMovementRules.Add(New clMovementRule("diagonal oben rechts", -1, 1, 1, True, True, False))
+
         ElseIf Me.Movement = enFigureMovement.PawnDown Then
-            oDirections.Add(New Integer() {1, 0})
+            ListOfMovementRules.Add(New clMovementRule("unten", 1, 0, 1, False, False, False))
+            ListOfMovementRules.Add(New clMovementRule("Startzug unten", 1, 0, 2, False, False, True))
+            ListOfMovementRules.Add(New clMovementRule("diagonal unten rechts", 1, 1, 1, True, True, False))
+            ListOfMovementRules.Add(New clMovementRule("diagonal unten links", 1, -1, 1, True, True, False))
+
         End If
 
-        Me.Directions = oDirections
+        Me.MovementRules = ListOfMovementRules
     End Sub
 
 End Class

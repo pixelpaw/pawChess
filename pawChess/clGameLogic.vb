@@ -55,60 +55,36 @@ Public Class clGameLogic
         Dim nCol As Integer = oCurrentField.IndexCol
         Dim nRow As Integer = oCurrentField.IndexRow
 
-        For Each nDirection As Integer() In oFigure.Directions
-            For i As Integer = 1 To oFigure.MaxSteps
-                nRow = oCurrentField.IndexRow + (nDirection(0) * i)
-                nCol = oCurrentField.IndexCol + (nDirection(1) * i)
+        For Each Rule As clMovementRule In oFigure.MovementRules
+            If Rule.OnlyFirstMove And oFigure.MoveCounter > 0 Then Continue For
+
+            For i As Integer = 1 To Rule.Steps
+                nRow = oCurrentField.IndexRow + (Rule.DirectionRow * i)
+                nCol = oCurrentField.IndexCol + (Rule.DirectionCol * i)
 
                 If nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8 Then Continue For
 
                 Dim tmpField As ucField = Board.GetField(nCol, nRow)
 
                 If tmpField.Figure Is Nothing Then
-                    tmpField.GlowState = enGlowMode.Neutral
-                ElseIf tmpField.Figure.PlayerColor = CurPlayer Then
-                    tmpField.GlowState = enGlowMode.Off
-                    Exit For
-                ElseIf tmpField.Figure.PlayerColor <> CurPlayer Then
-                    tmpField.GlowState = enGlowMode.Bad
-                    Exit For
+                    If Rule.OnlyOnHit Then
+                        tmpField.GlowState = enGlowMode.Off
+                    Else
+                        tmpField.GlowState = enGlowMode.Neutral
+                    End If
                 Else
-                    tmpField.GlowState = enGlowMode.Off
+                    If tmpField.Figure.PlayerColor = CurPlayer Then
+                        tmpField.GlowState = enGlowMode.Off
+                        Exit For
+
+                    ElseIf tmpField.Figure.PlayerColor <> CurPlayer And Rule.AllowHit Then
+                        tmpField.GlowState = enGlowMode.Bad
+                        Exit For
+                    Else
+                        tmpField.GlowState = enGlowMode.Off
+                    End If
                 End If
             Next
-
-            ' Sonderregeln
-            If oFigure.Figure = enFigures.Pawn Then
-                ' einmal nach Links
-                nRow = oCurrentField.IndexRow + (nDirection(0) * oFigure.MaxSteps)
-                nCol = oCurrentField.IndexCol - 1
-
-                If Not (nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8) Then
-                    Dim tmpField As ucField = Board.GetField(nCol, nRow)
-                    If tmpField.Figure IsNot Nothing Then
-                        If tmpField.Figure.PlayerColor <> CurPlayer Then
-                            tmpField.GlowState = enGlowMode.Bad
-                        Else
-                            tmpField.GlowState = enGlowMode.Off
-                        End If
-                    End If
-                End If
-
-                ' einmal nach rechts
-                nRow = oCurrentField.IndexRow + (nDirection(0) * oFigure.MaxSteps)
-                nCol = oCurrentField.IndexCol + 1
-
-                If Not (nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8) Then
-                    Dim tmpField As ucField = Board.GetField(nCol, nRow)
-                    If tmpField.Figure IsNot Nothing Then
-                        If tmpField.Figure.PlayerColor <> CurPlayer Then
-                            tmpField.GlowState = enGlowMode.Bad
-                        Else
-                            tmpField.GlowState = enGlowMode.Off
-                        End If
-                    End If
-                End If
-            End If
         Next
 
     End Sub

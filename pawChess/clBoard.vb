@@ -272,9 +272,15 @@ Public Class clBoard
 
         Me.colFields(GetFieldIndex(4, 5)).SetFigure(New clKnight(enPlayerColor.White))
         Me.colFields(GetFieldIndex(3, 3)).SetFigure(New clKnight(enPlayerColor.White))
-        Me.colFields(GetFieldIndex(2, 4)).SetFigure(New clQueen(enPlayerColor.Black))
         Me.colFields(GetFieldIndex(8, 4)).SetFigure(New clRook(enPlayerColor.White))
         Me.colFields(GetFieldIndex(3, 5)).SetFigure(New clPawn(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(3, 7)).SetFigure(New clPawn(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(2, 7)).SetFigure(New clPawn(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(1, 7)).SetFigure(New clPawn(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(1, 6)).SetFigure(New clBishop(enPlayerColor.White))
+
+        Me.colFields(GetFieldIndex(2, 4)).SetFigure(New clQueen(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(4, 4)).SetFigure(New clBishop(enPlayerColor.Black))
 
         Exit Sub
         ' schwarze Figuren

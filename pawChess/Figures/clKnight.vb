@@ -14,17 +14,20 @@ Public Class clKnight
         Me.Movement = mdSettings.enFigureMovement.Normal
         Me.MaxSteps = 1
 
-        Dim oDirections As New List(Of Integer())
-        oDirections.Add(New Integer() {-2, -1})
-        oDirections.Add(New Integer() {-2, 1})
-        oDirections.Add(New Integer() {-1, -2})
-        oDirections.Add(New Integer() {-1, 2})
-        oDirections.Add(New Integer() {1, 2})
-        oDirections.Add(New Integer() {1, -2})
-        oDirections.Add(New Integer() {2, 1})
-        oDirections.Add(New Integer() {2, -1})
+        Dim ListOfMovementRules As New List(Of clMovementRule)
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt oben links", -2, -1, 1, True, False, False))
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt oben rechts", -2, 1, 1, True, False, False))
 
-        Me.Directions = oDirections
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt unten rechts", 2, 1, 1, True, False, False))
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt unten links", 2, -1, 1, True, False, False))
+
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt rechts oben", -1, 2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt rechts unten", 1, 2, 1, True, False, False))
+
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt link oben", -1, -2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMovementRule("L-Schritt links unten", 1, -2, 1, True, False, False))
+
+        Me.MovementRules = ListOfMovementRules
     End Sub
 
 End Class
