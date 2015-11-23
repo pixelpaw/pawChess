@@ -4,102 +4,6 @@ Option Explicit On
 Imports System.ComponentModel
 Public Module mdSettings
 
-#Region "Enums"
-
-    Public Enum enFigureMovement
-        <Description("nach Unten")> PawnDown
-        <Description("nach Oben")> PawnUp
-        <Description("normal")> Normal
-    End Enum
-
-    Public Enum enFieldTyp
-        <Description("Ecke")> Corner
-        <Description("Rand Horizontal")> MapHorizontal
-        <Description("Rand Vertikal")> MapVertical
-        <Description("Helles Schachfeld")> Bright
-        <Description("Dunkles Schachfeld")> Dark
-    End Enum
-
-    Public Enum enGlowMode
-        <Description("schlecht - Figur schlagen")> Bad
-        <Description("gut")> Good
-        <Description("neutral - normaler Zug")> Neutral
-        <Description("aus - Zug verboten")> Off
-    End Enum
-
-    Public Enum enPlayerColor
-        <Description("Weiss")> White
-        <Description("Schwarz")> Black
-    End Enum
-
-    Public Enum enPlayerType
-        <Description("Computer")> Bot
-        <Description("Mensch")> Human
-    End Enum
-
-    Public Enum enFigures
-        <Description("König")> King
-        <Description("Königin")> Queen
-        <Description("Turm")> Rook
-        <Description("Läufer")> Bishop
-        <Description("Springer")> Knight
-        <Description("Bauer")> Pawn
-    End Enum
-
-    Public Enum enFiguresColored
-        <Description("weisser König")> White_King
-        <Description("weisse Königin")> White_Queen
-        <Description("weisser Turm")> White_Rook
-        <Description("weisser Läufer")> White_Bishop
-        <Description("weisser Springer")> White_Knight
-        <Description("weisser Bauer")> White_Pawn
-
-        <Description("schwarzer König")> Black_King
-        <Description("schwarze Königin")> Black_Queen
-        <Description("schwarzer Turm")> Black_Rook
-        <Description("schwarzer Läufer")> Black_Bishop
-        <Description("schwarzer Springer")> Black_Knight
-        <Description("schwarzer Bauer")> Black_Pawn
-    End Enum
-
-#End Region
-
-#Region "Functions"
-
-    Public Function GetFigureUnicode(ByVal nFigure As enFiguresColored) As String
-        Select Case nFigure
-            Case enFiguresColored.White_King : Return Strings.ChrW(&H2654)
-            Case enFiguresColored.White_Queen : Return Strings.ChrW(&H2655)
-            Case enFiguresColored.White_Rook : Return Strings.ChrW(&H2656)
-            Case enFiguresColored.White_Bishop : Return Strings.ChrW(&H2657)
-            Case enFiguresColored.White_Knight : Return Strings.ChrW(&H2658)
-            Case enFiguresColored.White_Pawn : Return Strings.ChrW(&H2659)
-
-            Case enFiguresColored.Black_King : Return Strings.ChrW(&H265A)
-            Case enFiguresColored.Black_Queen : Return Strings.ChrW(&H265B)
-            Case enFiguresColored.Black_Rook : Return Strings.ChrW(&H265C)
-            Case enFiguresColored.Black_Bishop : Return Strings.ChrW(&H265D)
-            Case enFiguresColored.Black_Knight : Return Strings.ChrW(&H265E)
-            Case enFiguresColored.Black_Pawn : Return Strings.ChrW(&H265F)
-            Case Else : Return ""
-        End Select
-    End Function
-
-    Public Function GetDescription(ByVal EnumConstant As [Enum]) As String
-        Dim fi As System.Reflection.FieldInfo = EnumConstant.GetType().GetField(EnumConstant.ToString())
-        If fi Is Nothing Then Return EnumConstant.ToString()
-        Dim aattr() As System.ComponentModel.DescriptionAttribute = TryCast(fi.GetCustomAttributes(GetType(System.ComponentModel.DescriptionAttribute), False), System.ComponentModel.DescriptionAttribute())
-        If aattr.Length > 0 Then
-            Return aattr(0).Description
-        Else
-            Return EnumConstant.ToString()
-        End If
-    End Function
-
-#End Region
-
-#Region "Variablen"
-
     Public mScreenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public mScreenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
 
@@ -134,25 +38,47 @@ Public Module mdSettings
     Public mFont_Small_Regular As Font = New Font("Segoe UI", 9, FontStyle.Regular)
     Public mFont_Small_Bold As Font = New Font("Segoe UI", 9, FontStyle.Bold)
 
+    Public mstrWhite_King As String = Strings.ChrW(&H2654)
+    Public mstrWhite_Queen As String = Strings.ChrW(&H2655)
+    Public mstrWhite_Rook As String = Strings.ChrW(&H2656)
+    Public mstrWhite_Bishop As String = Strings.ChrW(&H2657)
+    Public mstrWhite_Knight As String = Strings.ChrW(&H2658)
+    Public mstrWhite_Pawn As String = Strings.ChrW(&H2659)
+
+    Public mstrBlack_King As String = Strings.ChrW(&H265A)
+    Public mstrBlack_Queen As String = Strings.ChrW(&H265B)
+    Public mstrBlack_Rook As String = Strings.ChrW(&H265C)
+    Public mstrBlack_Bishop As String = Strings.ChrW(&H265D)
+    Public mstrBlack_Knight As String = Strings.ChrW(&H265E)
+    Public mstrBlack_Pawn As String = Strings.ChrW(&H265F)
+
     ' Variablen für die Schach-Notationen
+    ' Nur ausführliche Notation -> https://de.wikipedia.org/wiki/Schachnotation
     Public mCN_Move As String = "-"
     Public mCN_Hit As String = "x"
     Public mCN_Chess As String = "+"
     Public mCN_Matt As String = "++"
+    Public mCN_Remis As String = "="
     Public mCN_RochadeShort As String = "0-0"
     Public mCN_RochadeLong As String = "0-0-0"
     Public mCN_enPassant As String = "e.p."
-    Public mCN_CommentStart As String = "{"
-    Public mCN_CommentEnd As String = "}"
     Public mCN_Separator As String = " "
     Public mCN_Delimiter As String = ";"
-    Public mCH_King As String = "K"
-    Public mCH_Queen As String = "Q"
-    Public mCH_Rook As String = "R"
-    Public mCH_Bishop As String = "B"
-    Public mCH_Knight As String = "K"
-    Public mCH_Pawn As String = ""
 
-#End Region
+    Public mCN_King As String = "K"
+    Public mCN_Queen As String = "Q"
+    Public mCN_Rook As String = "R"
+    Public mCN_Bishop As String = "B"
+    Public mCN_Knight As String = "N"
+    Public mCN_Pawn As String = "P"
+
+    Public mCN_CommentStart As String = "{"
+    Public mCN_CommentEnd As String = "}"
+    Public mCN_CommentMoveIsBrilliant As String = "!!"
+    Public mCN_CommentMoveIsGood As String = "!"
+    Public mCN_CommentMoveIsBad As String = "?"
+    Public mCN_CommentMoveIsVeryBad As String = "??"
+    Public mCN_CommentMoveIsInteresting As String = "!?"
+    Public mCN_CommentMoveIsQuestionable As String = "?!"
 
 End Module

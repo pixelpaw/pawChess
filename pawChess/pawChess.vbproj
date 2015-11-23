@@ -92,6 +92,7 @@
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mdPublicEnums.vb" />
     <Compile Include="mdSettings.vb" />
     <Compile Include="mdTools.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

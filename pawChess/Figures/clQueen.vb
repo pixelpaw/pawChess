@@ -8,8 +8,9 @@ Public Class clQueen
         Me.PlayerColor = oPlayerColor
         Me.Figure = enFigures.Queen
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Queen, enFiguresColored.White_Queen)
-        Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
-        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
+        Me.FigureID = mdTools.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdTools.GetEnumDescription(Me.FigureColored)
+        Me.ChessNoteID = mdTools.GetFigureChessNoteID(Me.Figure)
         Me.Value = 9
         Me.MoveCounter = 0
         Me.MaxSteps = 7

@@ -9,7 +9,7 @@ Public Class clGameLogic
     Public PlayerBlack As clPlayer = Nothing
 
     Dim SelectedField As ucField = Nothing
-    Dim CurPlayer As mdSettings.enPlayerColor
+    Dim CurPlayer As mdPublicEnums.enPlayerColor
 
     Public Sub New()
         Board = New clBoard
@@ -19,9 +19,7 @@ Public Class clGameLogic
         PlayerWhite = New clPlayer(enPlayerColor.White, enPlayerType.Human)
         PlayerBlack = New clPlayer(enPlayerColor.Black, enPlayerType.Human)
 
-        CurPlayer = mdSettings.enPlayerColor.White
-
-        UpdatePlayer()
+        UpdatePlayer(True)
     End Sub
 
     Public Sub ResizeBoard(ByVal bIsMaximized As Boolean)
@@ -29,24 +27,46 @@ Public Class clGameLogic
     End Sub
 
     Public Sub DisposeSelectedField()
-        If SelectedField IsNot Nothing Then SelectedField.GlowOff()
         SelectedField = Nothing
+        Board.Clear()
     End Sub
 
     Public Sub Board_Field_Click(ByVal oField As ucField) Handles Board.tmp_Field_Click
-        If oField.IsChessField Then
-            If SelectedField Is Nothing Then
+        If oField.IsChessField _
+            AndAlso SelectedField IsNot Nothing _
+            AndAlso (oField.GlowState = enGlowMode.Neutral Or oField.GlowState = enGlowMode.Bad) _
+            AndAlso (oField.Figure Is Nothing OrElse oField.Figure.PlayerColor <> CurPlayer) Then
+
+            If Board.MoveFigure(mdTools.GetMovementString(SelectedField, oField)) Then
+                SelectedField = Nothing
+                Board.Clear()
+                'UpdatePlayer()
+            End If
+        Else
+            If Not oField.IsChessField Then
+                DisposeSelectedField()
+
+            ElseIf oField.Figure Is Nothing Then
+                DisposeSelectedField()
+
+            ElseIf oField.Figure.PlayerColor <> CurPlayer Then
+                DisposeSelectedField()
+
+            ElseIf SelectedField Is Nothing Then
                 SelectedField = oField
                 SelectedField.GlowState = enGlowMode.Good
+
             Else
                 If SelectedField.Index = oField.Index Then
                     DisposeSelectedField()
+                    CheckMovement(oField)
                 Else
-
+                    DisposeSelectedField()
+                    CheckMovement(oField)
+                    SelectedField = oField
+                    SelectedField.GlowState = enGlowMode.Good
                 End If
             End If
-        Else
-            DisposeSelectedField()
         End If
     End Sub
 
@@ -54,10 +74,9 @@ Public Class clGameLogic
         If SelectedField IsNot Nothing Then Exit Sub
 
         If oField.IsChessField Then
-            Board.lblFieldInfo.Text = "Feld " & oField.Name & " ( " & oField.Index & " ) " & If(oField.Figure IsNot Nothing, " | " & GetDescription(oField.Figure.FigureColored), "")
+            Board.lblFieldInfo.Text = "Feld " & oField.Name & " ( " & oField.Index & " ) " & If(oField.Figure IsNot Nothing, " | " & mdTools.GetEnumDescription(oField.Figure.FigureColored), "")
 
             If oField.Figure IsNot Nothing AndAlso oField.Figure.PlayerColor = CurPlayer Then
-                oField.GlowState = enGlowMode.Neutral
                 CheckMovement(oField)
             End If
         End If
@@ -65,16 +84,22 @@ Public Class clGameLogic
 
     Public Sub Board_Field_MouseLeave(ByVal oField As ucField) Handles Board.tmp_Field_MouseLeave
         If SelectedField IsNot Nothing Then Exit Sub
-
-        Board.GlowOff()
-        Board.ClearLog()
+        Board.Clear()
     End Sub
 
-    Public Sub UpdatePlayer()
-        Board.lblPlayer.Text = mdSettings.GetDescription(CurPlayer) & " am zug"
+    Public Sub UpdatePlayer(Optional ByVal bGameStart As Boolean = False)
+        If bGameStart Then
+            CurPlayer = mdPublicEnums.enPlayerColor.White
+        Else
+            CurPlayer = If(CurPlayer = mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White)
+        End If
+
+        Board.lblPlayer.Text = mdTools.GetEnumDescription(CurPlayer) & " am zug"
     End Sub
 
     Public Sub CheckMovement(ByVal oCurrentField As ucField)
+        oCurrentField.GlowState = enGlowMode.Neutral
+
         Dim oFigure As clChessFigure = oCurrentField.Figure
         Dim nCol As Integer = oCurrentField.IndexCol
         Dim nRow As Integer = oCurrentField.IndexRow

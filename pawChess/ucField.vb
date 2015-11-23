@@ -9,7 +9,7 @@ Public Class ucField
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
 
     Public Property InnerField As Label
-    Public Property FieldTyp As mdSettings.enFieldTyp
+    Public Property FieldTyp As mdPublicEnums.enFieldTyp
     Public Property Index As String
     Public Property IndexCol As Integer
     Public Property IndexRow As Integer
@@ -29,13 +29,13 @@ Public Class ucField
         End Set
     End Property
 
-    Private moGlowState As mdSettings.enGlowMode = enGlowMode.Off
-    Public Property GlowState() As mdSettings.enGlowMode
+    Private moGlowState As mdPublicEnums.enGlowMode = enGlowMode.Off
+    Public Property GlowState() As mdPublicEnums.enGlowMode
         Get
             Return Me.moGlowState
         End Get
 
-        Set(ByVal value As mdSettings.enGlowMode)
+        Set(ByVal value As mdPublicEnums.enGlowMode)
             If Not (value = moGlowState) Then
                 Me.moGlowState = value
                 NotifyPropertyChanged("GlowState")
@@ -52,7 +52,7 @@ Public Class ucField
         RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
     End Sub
 
-    Public Sub New(ByVal oTyp As mdSettings.enFieldTyp)
+    Public Sub New(ByVal oTyp As mdPublicEnums.enFieldTyp)
         InitializeComponent()
 
         Me.FieldTyp = oTyp
@@ -108,7 +108,7 @@ Public Class ucField
         Me.InnerField.BackColor = GetGlowColor(Me.GlowState)
     End Sub
 
-    Public Function GetGlowColor(ByVal GlowMode As mdSettings.enGlowMode) As Color
+    Public Function GetGlowColor(ByVal GlowMode As mdPublicEnums.enGlowMode) As Color
         Select Case GlowMode
             Case enGlowMode.Bad : Return mdSettings.moColor_GlowBad
             Case enGlowMode.Good : Return mdSettings.moColor_GlowGood
