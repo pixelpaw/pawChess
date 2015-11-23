@@ -9,6 +9,7 @@ Public Class clRook
         Me.Figure = enFigures.Rook
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Rook, enFiguresColored.White_Rook)
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
         Me.Value = 5
         Me.MoveCounter = 0
         Me.MaxSteps = 7

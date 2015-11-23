@@ -9,6 +9,7 @@ Public Class clKnight
         Me.Figure = enFigures.Knight
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Knight, enFiguresColored.White_Knight)
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
         Me.Value = 3
         Me.MoveCounter = 0
         Me.Movement = mdSettings.enFigureMovement.Normal

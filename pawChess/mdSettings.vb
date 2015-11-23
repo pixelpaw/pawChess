@@ -117,10 +117,6 @@ Public Module mdSettings
 
     Public mnDefaultPos As Integer = 12
 
-    'Public mnSize_Small As Integer = 20
-    'Public mnSize_Big As Integer = 40
-    'Public mnSize_LogPanel As Integer = 170
-
     Public mnSize_Small As Integer = 35
     Public mnSize_Big As Integer = 75
     Public mnSize_LogPanel As Integer = 250

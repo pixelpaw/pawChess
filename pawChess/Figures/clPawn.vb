@@ -9,6 +9,7 @@ Public Class clPawn
         Me.Figure = enFigures.Pawn
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Pawn, enFiguresColored.White_Pawn)
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
         Me.Value = 1
         Me.MoveCounter = 0
         Me.Movement = If(oPlayerColor = enPlayerColor.Black, enFigureMovement.PawnDown, enFigureMovement.PawnUp)

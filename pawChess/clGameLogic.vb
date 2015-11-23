@@ -4,9 +4,11 @@ Option Explicit On
 Public Class clGameLogic
 
     Public WithEvents Board As clBoard = Nothing
+
     Public PlayerWhite As clPlayer = Nothing
     Public PlayerBlack As clPlayer = Nothing
 
+    Dim SelectedField As ucField = Nothing
     Dim CurPlayer As mdSettings.enPlayerColor
 
     Public Sub New()
@@ -26,11 +28,31 @@ Public Class clGameLogic
         If Board IsNot Nothing Then Board.ResizeBoard(bIsMaximized)
     End Sub
 
+    Public Sub DisposeSelectedField()
+        If SelectedField IsNot Nothing Then SelectedField.GlowOff()
+        SelectedField = Nothing
+    End Sub
+
     Public Sub Board_Field_Click(ByVal oField As ucField) Handles Board.tmp_Field_Click
-        oField.GlowState = enGlowMode.Good
+        If oField.IsChessField Then
+            If SelectedField Is Nothing Then
+                SelectedField = oField
+                SelectedField.GlowState = enGlowMode.Good
+            Else
+                If SelectedField.Index = oField.Index Then
+                    DisposeSelectedField()
+                Else
+
+                End If
+            End If
+        Else
+            DisposeSelectedField()
+        End If
     End Sub
 
     Public Sub Board_Field_MouseEnter(ByVal oField As ucField) Handles Board.tmp_Field_MouseEnter
+        If SelectedField IsNot Nothing Then Exit Sub
+
         If oField.IsChessField Then
             Board.lblFieldInfo.Text = "Feld " & oField.Name & " ( " & oField.Index & " ) " & If(oField.Figure IsNot Nothing, " | " & GetDescription(oField.Figure.FigureColored), "")
 
@@ -42,6 +64,8 @@ Public Class clGameLogic
     End Sub
 
     Public Sub Board_Field_MouseLeave(ByVal oField As ucField) Handles Board.tmp_Field_MouseLeave
+        If SelectedField IsNot Nothing Then Exit Sub
+
         Board.GlowOff()
         Board.ClearLog()
     End Sub
@@ -77,11 +101,14 @@ Public Class clGameLogic
                         tmpField.GlowState = enGlowMode.Off
                         Exit For
 
-                    ElseIf tmpField.Figure.PlayerColor <> CurPlayer And Rule.AllowHit Then
-                        tmpField.GlowState = enGlowMode.Bad
-                        Exit For
                     Else
-                        tmpField.GlowState = enGlowMode.Off
+                        If Rule.AllowHit Then
+                            tmpField.GlowState = enGlowMode.Bad
+                            Exit For
+                        Else
+                            tmpField.GlowState = enGlowMode.Off
+                            Exit For
+                        End If
                     End If
                 End If
             Next

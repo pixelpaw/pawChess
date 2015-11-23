@@ -14,7 +14,20 @@ Public Class ucField
     Public Property IndexCol As Integer
     Public Property IndexRow As Integer
     Public Property IsChessField As Boolean = False
-    Public Property Figure As clChessFigure = Nothing
+
+    Private moFigure As clChessFigure = Nothing
+    Public Property Figure() As clChessFigure
+        Get
+            Return Me.moFigure
+        End Get
+
+        Set(ByVal value As clChessFigure)
+            If (value Is Nothing Or Me.moFigure Is Nothing) OrElse (value.FigureName <> Me.moFigure.FigureName) Then
+                Me.moFigure = value
+                NotifyPropertyChanged("Figure")
+            End If
+        End Set
+    End Property
 
     Private moGlowState As mdSettings.enGlowMode = enGlowMode.Off
     Public Property GlowState() As mdSettings.enGlowMode
@@ -31,7 +44,11 @@ Public Class ucField
     End Property
 
     Public Sub NotifyPropertyChanged(ByVal info As String)
-        Glow()
+        Select Case info
+            Case "GlowState" : Me.RefreshGlow()
+            Case "Figure" : Me.RefreshFigure()
+        End Select
+
         RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
     End Sub
 
@@ -76,11 +93,7 @@ Public Class ucField
         InnerField.Padding = New Padding(6, 0, 0, 0)
 
         Me.Controls.Add(InnerField)
-    End Sub
 
-    Public Sub SetFigure(ByVal oFigure As clChessFigure)
-        Me.Figure = oFigure
-        Me.RefreshFigure()
     End Sub
 
     Public Sub RefreshFigure()
@@ -91,6 +104,10 @@ Public Class ucField
         End If
     End Sub
 
+    Public Sub RefreshGlow()
+        Me.InnerField.BackColor = GetGlowColor(Me.GlowState)
+    End Sub
+
     Public Function GetGlowColor(ByVal GlowMode As mdSettings.enGlowMode) As Color
         Select Case GlowMode
             Case enGlowMode.Bad : Return mdSettings.moColor_GlowBad
@@ -99,14 +116,6 @@ Public Class ucField
             Case enGlowMode.Off : Return mdSettings.moColor_GlowOff
         End Select
     End Function
-
-    Public Sub Glow()
-        Me.InnerField.BackColor = GetGlowColor(Me.GlowState)
-    End Sub
-
-    Public Sub Glow(ByVal GlowMode As mdSettings.enGlowMode)
-        Me.GlowState = GlowMode
-    End Sub
 
     Public Sub GlowOff()
         Me.GlowState = enGlowMode.Off

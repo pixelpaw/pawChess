@@ -9,6 +9,7 @@ Public Class clQueen
         Me.Figure = enFigures.Queen
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Queen, enFiguresColored.White_Queen)
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
         Me.Value = 9
         Me.MoveCounter = 0
         Me.MaxSteps = 7

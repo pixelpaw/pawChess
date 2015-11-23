@@ -9,6 +9,7 @@ Public Class clKing
         Me.Figure = enFigures.King
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_King, enFiguresColored.White_King)
         Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdSettings.GetDescription(Me.FigureColored)
         Me.Value = 1
         Me.MoveCounter = 0
         Me.MaxSteps = 1
