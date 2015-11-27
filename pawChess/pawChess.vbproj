@@ -76,6 +76,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="clChessFigure.vb" />
+    <Compile Include="clChessMove.vb" />
     <Compile Include="clGameLogic.vb" />
     <Compile Include="clMovementRule.vb" />
     <Compile Include="clPlayer.vb" />

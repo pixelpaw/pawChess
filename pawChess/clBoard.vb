@@ -15,6 +15,7 @@ Public Class clBoard
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
+    Public colChessMoves As New Generic.Dictionary(Of Integer, clChessMove)
 
     Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
     Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
