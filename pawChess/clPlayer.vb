@@ -3,10 +3,10 @@ Option Explicit On
 
 Public Class clPlayer
 
-    Public Property PlayerColor As mdSettings.enPlayerColor
-    Public Property PlayerType As mdSettings.enPlayerType
+    Public Property PlayerColor As mdPublicEnums.enPlayerColor
+    Public Property PlayerType As mdPublicEnums.enPlayerType
 
-    Public Sub New(ByVal oColor As mdSettings.enPlayerColor, ByVal oPlayerType As mdSettings.enPlayerType)
+    Public Sub New(ByVal oColor As mdPublicEnums.enPlayerColor, ByVal oPlayerType As mdPublicEnums.enPlayerType)
         PlayerColor = oColor
         PlayerType = oPlayerType
     End Sub

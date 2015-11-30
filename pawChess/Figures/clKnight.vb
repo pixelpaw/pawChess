@@ -8,10 +8,12 @@ Public Class clKnight
         Me.PlayerColor = oPlayerColor
         Me.Figure = enFigures.Knight
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Knight, enFiguresColored.White_Knight)
-        Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureID = mdTools.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdTools.GetEnumDescription(Me.FigureColored)
+        Me.ChessNoteID = mdTools.GetFigureChessNoteID(Me.Figure)
         Me.Value = 3
         Me.MoveCounter = 0
-        Me.Movement = mdSettings.enFigureMovement.Normal
+        Me.Movement = mdPublicEnums.enFigureMovement.Normal
         Me.MaxSteps = 1
 
         Dim ListOfMovementRules As New List(Of clMovementRule)

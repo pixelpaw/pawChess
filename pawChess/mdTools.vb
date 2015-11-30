@@ -3,6 +3,82 @@ Option Explicit On
 
 Public Module mdTools
 
+    Public Function GetMovementString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal strComment As String = "") As String
+        Dim strResult As String = ""
+
+        Dim strMove As String = mdSettings.mCN_Move
+        If TargetField.Figure IsNot Nothing Then
+            If TargetField.Figure.Figure = mdPublicEnums.enFigures.King Then
+                strMove = mdSettings.mCN_Chess
+            Else
+                strMove = mdSettings.mCN_Hit
+            End If
+        End If
+
+        If Not String.IsNullOrEmpty(strComment) Then
+            strComment = mdSettings.mCN_CommentStart & strComment & mdSettings.mCN_CommentEnd
+        End If
+
+        Dim strSourceFigureID As String = SourceField.Figure.ChessNoteID
+        Dim strTargetFigureID As String = If(TargetField.Figure IsNot Nothing, TargetField.Figure.ChessNoteID, "")
+
+        Dim strSourceField As String = SourceField.Name
+        Dim strTargetField As String = TargetField.Name
+
+        strResult &= strSourceFigureID
+        strResult &= strSourceField
+        strResult &= strMove
+        strResult &= strTargetFigureID
+        strResult &= strTargetField
+        strResult &= mdSettings.mCN_Separator
+        strResult &= strComment
+        strResult &= mdSettings.mCN_Delimiter
+
+        Return strResult
+    End Function
+
+    Public Function GetFigureChessNoteID(ByVal nFigure As enFigures) As String
+        Select Case nFigure
+            Case enFigures.King : Return mCN_King
+            Case enFigures.Queen : Return mCN_Queen
+            Case enFigures.Rook : Return mCN_Rook
+            Case enFigures.Bishop : Return mCN_Bishop
+            Case enFigures.Knight : Return mCN_Knight
+            Case enFigures.Pawn : Return mCN_Pawn
+            Case Else : Return ""
+        End Select
+    End Function
+
+    Public Function GetFigureUnicode(ByVal nFigure As enFiguresColored) As String
+        Select Case nFigure
+            Case enFiguresColored.White_King : Return mdSettings.mstrWhite_King
+            Case enFiguresColored.White_Queen : Return mdSettings.mstrWhite_Queen
+            Case enFiguresColored.White_Rook : Return mdSettings.mstrWhite_Rook
+            Case enFiguresColored.White_Bishop : Return mdSettings.mstrWhite_Bishop
+            Case enFiguresColored.White_Knight : Return mdSettings.mstrWhite_Knight
+            Case enFiguresColored.White_Pawn : Return mdSettings.mstrWhite_Pawn
+
+            Case enFiguresColored.Black_King : Return mdSettings.mstrBlack_King
+            Case enFiguresColored.Black_Queen : Return mdSettings.mstrBlack_Queen
+            Case enFiguresColored.Black_Rook : Return mdSettings.mstrBlack_Rook
+            Case enFiguresColored.Black_Bishop : Return mdSettings.mstrBlack_Bishop
+            Case enFiguresColored.Black_Knight : Return mdSettings.mstrBlack_Knight
+            Case enFiguresColored.Black_Pawn : Return mdSettings.mstrBlack_Pawn
+            Case Else : Return ""
+        End Select
+    End Function
+
+    Public Function GetEnumDescription(ByVal EnumConstant As [Enum]) As String
+        Dim fi As System.Reflection.FieldInfo = EnumConstant.GetType().GetField(EnumConstant.ToString())
+        If fi Is Nothing Then Return EnumConstant.ToString()
+        Dim aattr() As System.ComponentModel.DescriptionAttribute = TryCast(fi.GetCustomAttributes(GetType(System.ComponentModel.DescriptionAttribute), False), System.ComponentModel.DescriptionAttribute())
+        If aattr.Length > 0 Then
+            Return aattr(0).Description
+        Else
+            Return EnumConstant.ToString()
+        End If
+    End Function
+
     Public Function IsBetween(ByVal nValue As Object, ByVal nLBound As Object, ByVal nUBound As Object, Optional ByVal bHandleAsInteger As Boolean = True) As Boolean
         Try
             If bHandleAsInteger Then
@@ -24,8 +100,4 @@ Public Module mdTools
         End If
     End Function
 
-    Const cnDummy As Integer = Integer.MaxValue ' Wir brauchen einen Dummy-Parameter, denn Nothing resultiert in 0
-    Public Function IsOneOf(ByVal nValue As Integer, Optional ByVal n0 As Integer = cnDummy, Optional ByVal n1 As Integer = cnDummy, Optional ByVal n2 As Integer = cnDummy, Optional ByVal n3 As Integer = cnDummy, Optional ByVal n4 As Integer = cnDummy, Optional ByVal n5 As Integer = cnDummy, Optional ByVal n6 As Integer = cnDummy, Optional ByVal n7 As Integer = cnDummy, Optional ByVal n8 As Integer = cnDummy, Optional ByVal n9 As Integer = cnDummy) As Boolean
-        Return nValue = n0 OrElse nValue = n1 OrElse nValue = n2 OrElse nValue = n3 OrElse nValue = n4 OrElse nValue = n5 OrElse nValue = n6 OrElse nValue = n7 OrElse nValue = n8 OrElse nValue = n9
-    End Function
 End Module

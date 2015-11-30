@@ -15,9 +15,7 @@ Public Class clBoard
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
-
-    'Public Delegate Sub FieldClickHandler(ByVal col As Integer, ByVal row As Integer)
-    'Public Delegate Sub FieldMouseMoveHandler(ByVal col As Integer, ByVal row As Integer)
+    Public colChessMoves As New Generic.Dictionary(Of Integer, clChessMove)
 
     Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
     Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
@@ -29,12 +27,74 @@ Public Class clBoard
     Dim nFieldSize As Integer
 
     Public Sub New()
-        Me.BackColor = Color.Transparent
+        Me.BackColor = Color.SaddleBrown
         Me.Size = frmMain.ClientSize
         Me.nFieldSize = mdSettings.mnSize_Big
 
         frmMain.Controls.Add(Me)
     End Sub
+
+    Public Sub Clear()
+        Me.GlowOff()
+        Me.ClearLog()
+    End Sub
+
+    Public Function MoveFigure(ByVal strMove As String) As Boolean
+        Dim strSourceField As String = ""
+        Dim strTargetField As String = ""
+        Dim strMoveType As String = ""
+
+        strMove = strMove.Replace(mdSettings.mCN_Delimiter, "")
+
+        Dim strComment As String = ""
+        If strMove.Contains(mdSettings.mCN_CommentStart) Then
+            strComment = strMove.Substring(strMove.IndexOf(mdSettings.mCN_CommentStart), strMove.Length - strMove.IndexOf(mdSettings.mCN_CommentStart))
+            strComment = strComment.Replace(mdSettings.mCN_CommentStart, "").Replace(mdSettings.mCN_CommentEnd, "")
+
+            strMove = strMove.Substring(0, strMove.IndexOf(mdSettings.mCN_CommentStart))
+        End If
+
+        If strMove.Contains(mdSettings.mCN_RochadeShort) Or strMove.Contains(mdSettings.mCN_RochadeLong) Then
+            ' Rochade kurz / lang
+        ElseIf strMove.Contains(mdSettings.mCN_enPassant) Then
+            ' en Passant
+        ElseIf strMove.Contains(mdSettings.mCN_Matt) Then
+            strMoveType = mdSettings.mCN_Matt
+        Else
+            For i As Integer = 0 To strMove.Length - 1
+                Dim lastChar As String = If(i - 1 >= 0, strMove.Chars(i - 1), "")
+                Dim c As String = strMove.Chars(i)
+
+                ' Quell / Zielfigur-Figur
+                If (i = 0 Or lastChar = strMoveType) AndAlso mdTools.IsOneOf(c, mdSettings.mCN_Knight, mdSettings.mCN_Queen, mdSettings.mCN_Rook, mdSettings.mCN_Bishop, mdSettings.mCN_Knight, mdSettings.mCN_Pawn) Then
+                    Continue For
+                End If
+
+                ' Move-Art
+                If mdTools.IsOneOf(c, mdSettings.mCN_Move, mdSettings.mCN_Hit, mdSettings.mCN_Chess) Then
+                    strMoveType = c.ToString
+                    Continue For
+                End If
+
+                ' Feldnamen
+                If mdSettings.mstrNameSpaceH.Substring(1, mdSettings.mstrNameSpaceH.Length - 2).Contains(c) Or mdSettings.mstrNameSpaceV.Substring(1, mdSettings.mstrNameSpaceV.Length - 2).Contains(c) Then
+                    If strMoveType = "" Then
+                        strSourceField &= c.ToString
+                    Else
+                        strTargetField &= c.ToString
+                    End If
+                End If
+            Next i
+        End If
+
+        Dim SourceField As ucField = Me.GetFieldByName(strSourceField)
+        Dim TargetField As ucField = Me.GetFieldByName(strTargetField)
+
+        TargetField.Figure = SourceField.Figure
+        SourceField.Figure = Nothing
+
+        Return True
+    End Function
 
     Public Function GetFieldByName(ByVal strName As String) As ucField
         Dim oResult As ucField = Nothing
@@ -56,7 +116,7 @@ Public Class clBoard
     End Function
 
     Public Shared Function GetFieldIndex(ByVal nCol As Integer, ByVal nRow As Integer) As String
-        Return nRow.ToString & nCol.ToString
+        Return nCol.ToString & nRow.ToString
     End Function
 
     Public Sub GlowOff()
@@ -65,63 +125,16 @@ Public Class clBoard
         Next
     End Sub
 
-    Public Sub GlowFields(ByVal oListOfFields As Generic.List(Of String), ByVal bGlowOn As Boolean, ByVal GlowMode As mdSettings.enGlowMode)
-        For Each strIndex In oListOfFields
-            GetField(strIndex).GlowState = GlowMode
-        Next
-    End Sub
-
-    Public Sub GlowRow(ByVal oCurField As ucField, ByVal GlowMode As mdSettings.enGlowMode)
-        Select Case oCurField.FieldTyp
-            Case enFieldTyp.Corner
-                Dim nColStart As Integer = oCurField.IndexCol
-                Dim nRowStart As Integer = oCurField.IndexRow
-
-                Select Case oCurField.Index
-                    Case "00", "99"
-                        For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(i, i)).GlowState = GlowMode
-                        Next
-
-                    Case "09", "90"
-                        For i As Integer = 0 To 9
-                            GetField(GetFieldIndex(9 - i, i)).GlowState = GlowMode
-                        Next
-
-                End Select
-
-            Case enFieldTyp.MapHorizontal
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).GlowState = GlowMode
-                Next
-
-            Case enFieldTyp.MapVertical
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).GlowState = GlowMode
-                Next
-
-            Case enFieldTyp.Bright, enFieldTyp.Dark
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(oCurField.IndexCol, i)).GlowState = GlowMode
-                Next
-
-                For i As Integer = 0 To 9
-                    GetField(GetFieldIndex(i, oCurField.IndexRow)).GlowState = GlowMode
-                Next
-        End Select
-    End Sub
-
     Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
+
         RaiseEvent tmp_Field_Click(oField)
     End Sub
 
     Public Sub Field_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
-
-        'GlowRow(oField, mdSettings.enGlowMode.Neutral)
 
         RaiseEvent tmp_Field_MouseEnter(oField)
     End Sub
@@ -130,16 +143,12 @@ Public Class clBoard
         Dim oLabel As Label = CType(sender, Label)
         Dim oField As ucField = CType(oLabel.Parent, ucField)
 
-        'GlowRow(oField, mdSettings.enGlowMode.Off)
-
         RaiseEvent tmp_Field_MouseLeave(oField)
     End Sub
 
     Public Sub ClearLog()
         lblFieldInfo.Text = ""
     End Sub
-
-#Region "DrawBoard"
 
     Public Sub DrawBoard()
         ' Schachfeld
@@ -209,7 +218,7 @@ Public Class clBoard
                 Dim strNameV As String = mdSettings.mstrNameSpaceV.Substring(i, 1)
                 Dim strName As String = strNameH & strNameV
 
-                Dim oTyp As mdSettings.enFieldTyp
+                Dim oTyp As mdPublicEnums.enFieldTyp = mdPublicEnums.enFieldTyp.None
                 If (i = 0 Or i = 9) AndAlso (j = 0 Or j = 9) Then
                     oTyp = enFieldTyp.Corner
                 ElseIf (i = 0 Or i = 9) AndAlso (j >= 1 And j <= 8) Then
@@ -269,75 +278,74 @@ Public Class clBoard
     End Sub
 
     Public Sub SetFiguresStartingPositions()
-        If 1 = 1 Then
-            Me.colFields(GetFieldIndex(4, 5)).SetFigure(New clKnight(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(3, 3)).SetFigure(New clKnight(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(8, 4)).SetFigure(New clRook(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(3, 5)).SetFigure(New clPawn(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(3, 7)).SetFigure(New clPawn(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(2, 7)).SetFigure(New clPawn(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(1, 7)).SetFigure(New clPawn(enPlayerColor.White))
-            Me.colFields(GetFieldIndex(1, 6)).SetFigure(New clBishop(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(1, 1)).Figure = New clKnight(enPlayerColor.White)
 
-            Me.colFields(GetFieldIndex(2, 4)).SetFigure(New clQueen(enPlayerColor.Black))
-            Me.colFields(GetFieldIndex(4, 4)).SetFigure(New clBishop(enPlayerColor.Black))
+        Exit Sub
 
-            Exit Sub
-        End If
+        Me.colFields(GetFieldIndex(4, 5)).Figure = New clKnight(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(3, 3)).Figure = New clKnight(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(3, 5)).Figure = New clPawn(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(3, 7)).Figure = New clPawn(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(2, 7)).Figure = New clPawn(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(1, 7)).Figure = New clPawn(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(1, 6)).Figure = New clBishop(enPlayerColor.White)
+
+        Me.colFields(GetFieldIndex(2, 4)).Figure = New clQueen(enPlayerColor.Black)
+        Me.colFields(GetFieldIndex(4, 4)).Figure = New clBishop(enPlayerColor.Black)
+        Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
+
+        Exit Sub
 
         ' schwarze Figuren
         ' Bauern
         For i As Integer = 1 To 8
-            Me.colFields(GetFieldIndex(i, 2)).SetFigure(New clPawn(enPlayerColor.Black))
+            Me.colFields(GetFieldIndex(i, 2)).Figure = New clPawn(enPlayerColor.Black)
         Next
 
         ' Türme
-        Me.colFields(GetFieldIndex(1, 1)).SetFigure(New clRook(enPlayerColor.Black))
-        Me.colFields(GetFieldIndex(8, 1)).SetFigure(New clRook(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(1, 1)).Figure = New clRook(enPlayerColor.Black)
+        Me.colFields(GetFieldIndex(8, 1)).Figure = New clRook(enPlayerColor.Black)
 
         ' Springer
-        Me.colFields(GetFieldIndex(2, 1)).SetFigure(New clKnight(enPlayerColor.Black))
-        Me.colFields(GetFieldIndex(7, 1)).SetFigure(New clKnight(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(2, 1)).Figure = New clKnight(enPlayerColor.Black)
+        Me.colFields(GetFieldIndex(7, 1)).Figure = New clKnight(enPlayerColor.Black)
 
         ' Läufer
-        Me.colFields(GetFieldIndex(3, 1)).SetFigure(New clBishop(enPlayerColor.Black))
-        Me.colFields(GetFieldIndex(6, 1)).SetFigure(New clBishop(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(3, 1)).Figure = New clBishop(enPlayerColor.Black)
+        Me.colFields(GetFieldIndex(6, 1)).Figure = New clBishop(enPlayerColor.Black)
 
         ' Königin
-        Me.colFields(GetFieldIndex(4, 1)).SetFigure(New clQueen(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(4, 1)).Figure = New clQueen(enPlayerColor.Black)
 
         ' König
-        Me.colFields(GetFieldIndex(5, 1)).SetFigure(New clKing(enPlayerColor.Black))
+        Me.colFields(GetFieldIndex(5, 1)).Figure = New clKing(enPlayerColor.Black)
 
         ' weisse Figuren
         ' Bauern
         For i As Integer = 1 To 8
-            Me.colFields(GetFieldIndex(i, 7)).SetFigure(New clPawn(enPlayerColor.White))
+            Me.colFields(GetFieldIndex(i, 7)).Figure = New clPawn(enPlayerColor.White)
         Next
 
         ' Türme
-        Me.colFields(GetFieldIndex(1, 8)).SetFigure(New clRook(enPlayerColor.White))
-        Me.colFields(GetFieldIndex(8, 8)).SetFigure(New clRook(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(1, 8)).Figure = New clRook(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(8, 8)).Figure = New clRook(enPlayerColor.White)
 
         ' Springer
-        Me.colFields(GetFieldIndex(2, 8)).SetFigure(New clKnight(enPlayerColor.White))
-        Me.colFields(GetFieldIndex(7, 8)).SetFigure(New clKnight(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(2, 8)).Figure = New clKnight(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(7, 8)).Figure = New clKnight(enPlayerColor.White)
 
         ' Läufer
-        Me.colFields(GetFieldIndex(3, 8)).SetFigure(New clBishop(enPlayerColor.White))
-        Me.colFields(GetFieldIndex(6, 8)).SetFigure(New clBishop(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(3, 8)).Figure = New clBishop(enPlayerColor.White)
+        Me.colFields(GetFieldIndex(6, 8)).Figure = New clBishop(enPlayerColor.White)
 
         ' Königin
-        Me.colFields(GetFieldIndex(4, 8)).SetFigure(New clQueen(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(4, 8)).Figure = New clQueen(enPlayerColor.White)
 
         ' König
-        Me.colFields(GetFieldIndex(5, 8)).SetFigure(New clKing(enPlayerColor.White))
+        Me.colFields(GetFieldIndex(5, 8)).Figure = New clKing(enPlayerColor.White)
 
     End Sub
-
-#End Region
-
-#Region "Resize"
 
     Public Sub ResizeBoardControls(ByVal bIsMaximized As Boolean)
         If GamePanel IsNot Nothing AndAlso LogPanel IsNot Nothing Then
@@ -427,7 +435,5 @@ Public Class clBoard
 
         'ResizeBoardControls(bIsMaximized)
     End Sub
-
-#End Region
 
 End Class

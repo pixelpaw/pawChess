@@ -8,7 +8,9 @@ Public Class clRook
         Me.PlayerColor = oPlayerColor
         Me.Figure = enFigures.Rook
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Rook, enFiguresColored.White_Rook)
-        Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureID = mdTools.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdTools.GetEnumDescription(Me.FigureColored)
+        Me.ChessNoteID = mdTools.GetFigureChessNoteID(Me.Figure)
         Me.Value = 5
         Me.MoveCounter = 0
         Me.MaxSteps = 7

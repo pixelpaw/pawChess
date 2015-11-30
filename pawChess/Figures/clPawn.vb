@@ -8,7 +8,9 @@ Public Class clPawn
         Me.PlayerColor = oPlayerColor
         Me.Figure = enFigures.Pawn
         Me.FigureColored = If(oPlayerColor = enPlayerColor.Black, enFiguresColored.Black_Pawn, enFiguresColored.White_Pawn)
-        Me.FigureID = mdSettings.GetFigureUnicode(Me.FigureColored)
+        Me.FigureID = mdTools.GetFigureUnicode(Me.FigureColored)
+        Me.FigureName = mdTools.GetEnumDescription(Me.FigureColored)
+        Me.ChessNoteID = mdTools.GetFigureChessNoteID(Me.Figure)
         Me.Value = 1
         Me.MoveCounter = 0
         Me.Movement = If(oPlayerColor = enPlayerColor.Black, enFigureMovement.PawnDown, enFigureMovement.PawnUp)
