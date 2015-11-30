@@ -8,6 +8,7 @@ Public Class clGameLogic
     Public PlayerBlack As clPlayer = Nothing
 
     Dim CurPlayer As mdSettings.enPlayerColor
+    Dim SelectedField As String
 
     Public Sub New()
         Board = New clBoard
@@ -27,7 +28,17 @@ Public Class clGameLogic
     End Sub
 
     Public Sub Board_Field_Click(ByVal oField As ucField) Handles Board.tmp_Field_Click
-        oField.GlowState = enGlowMode.Good
+        If oField.IsChessField Then
+        End If
+    End Sub
+
+    Public Sub ClearSelectedField()
+        Board.GetField(SelectedField).GlowOff()
+        SelectedField = ""
+    End Sub
+
+    Public Sub SetSelectedField()
+
     End Sub
 
     Public Sub Board_Field_MouseEnter(ByVal oField As ucField) Handles Board.tmp_Field_MouseEnter
