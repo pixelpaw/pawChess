@@ -40,7 +40,7 @@ Public Class clGameLogic
             If Board.MoveFigure(mdTools.GetMovementString(SelectedField, oField)) Then
                 SelectedField = Nothing
                 Board.Clear()
-                'UpdatePlayer()
+                UpdatePlayer()
             End If
         Else
             If Not oField.IsChessField Then

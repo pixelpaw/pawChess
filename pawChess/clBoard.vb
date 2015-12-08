@@ -44,7 +44,7 @@ Public Class clBoard
         Dim strTargetField As String = ""
         Dim strMoveType As String = ""
 
-        strMove = strMove.Replace(mdSettings.mCN_Delimiter, "")
+        strMove = strMove.Replace(mdSettings.mCN_Delimiter, "").Trim()
 
         Dim strComment As String = ""
         If strMove.Contains(mdSettings.mCN_CommentStart) Then
@@ -66,8 +66,10 @@ Public Class clBoard
                 Dim c As String = strMove.Chars(i)
 
                 ' Quell / Zielfigur-Figur
-                If (i = 0 Or lastChar = strMoveType) AndAlso mdTools.IsOneOf(c, mdSettings.mCN_Knight, mdSettings.mCN_Queen, mdSettings.mCN_Rook, mdSettings.mCN_Bishop, mdSettings.mCN_Knight, mdSettings.mCN_Pawn) Then
-                    Continue For
+                If i = 0 Or (lastChar = strMoveType And strMoveType = mdSettings.mCN_Hit) Then
+                    If mdTools.IsOneOf(c, mdSettings.mCN_Knight, mdSettings.mCN_Queen, mdSettings.mCN_Rook, mdSettings.mCN_Bishop, mdSettings.mCN_Knight, mdSettings.mCN_Pawn) Then
+                        Continue For
+                    End If
                 End If
 
                 ' Move-Art
@@ -278,24 +280,34 @@ Public Class clBoard
     End Sub
 
     Public Sub SetFiguresStartingPositions()
-        Me.colFields(GetFieldIndex(1, 1)).Figure = New clKnight(enPlayerColor.White)
+        Dim nTestfall As Integer = 0
 
-        Exit Sub
+        ' Testfall 1
+        If 1 = nTestfall Then
+            Me.colFields(GetFieldIndex(1, 1)).Figure = New clKnight(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(2, 3)).Figure = New clBishop(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(5, 3)).Figure = New clRook(enPlayerColor.Black)
 
-        Me.colFields(GetFieldIndex(4, 5)).Figure = New clKnight(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(3, 3)).Figure = New clKnight(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(3, 5)).Figure = New clPawn(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(3, 7)).Figure = New clPawn(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(2, 7)).Figure = New clPawn(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(1, 7)).Figure = New clPawn(enPlayerColor.White)
-        Me.colFields(GetFieldIndex(1, 6)).Figure = New clBishop(enPlayerColor.White)
+            Exit Sub
+        End If
 
-        Me.colFields(GetFieldIndex(2, 4)).Figure = New clQueen(enPlayerColor.Black)
-        Me.colFields(GetFieldIndex(4, 4)).Figure = New clBishop(enPlayerColor.Black)
-        Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
+        ' Testfall 2
+        If 2 = nTestfall Then
+            Me.colFields(GetFieldIndex(4, 5)).Figure = New clKnight(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(3, 3)).Figure = New clKnight(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(3, 5)).Figure = New clPawn(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(3, 7)).Figure = New clPawn(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(2, 7)).Figure = New clPawn(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(1, 7)).Figure = New clPawn(enPlayerColor.White)
+            Me.colFields(GetFieldIndex(1, 6)).Figure = New clBishop(enPlayerColor.White)
 
-        Exit Sub
+            Me.colFields(GetFieldIndex(2, 4)).Figure = New clQueen(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(4, 4)).Figure = New clBishop(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
+
+            Exit Sub
+        End If
 
         ' schwarze Figuren
         ' Bauern
