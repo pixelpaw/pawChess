@@ -95,6 +95,8 @@ Public Class clBoard
         TargetField.Figure = SourceField.Figure
         SourceField.Figure = Nothing
 
+        TargetField.Figure.MoveCounter += 1
+
         Return True
     End Function
 
