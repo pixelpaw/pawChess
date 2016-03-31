@@ -78,6 +78,8 @@
     <Compile Include="clChessFigure.vb" />
     <Compile Include="clChessMove.vb" />
     <Compile Include="clGameLogic.vb" />
+    <Compile Include="clLog.vb" />
+    <Compile Include="clLogEntry.vb" />
     <Compile Include="clMovementRule.vb" />
     <Compile Include="clPlayer.vb" />
     <Compile Include="Figures\clBishop.vb" />

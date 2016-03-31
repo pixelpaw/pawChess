@@ -12,6 +12,7 @@ Public Class clBoard
     Public LogPanel As Panel = Nothing
     Public lblPlayer As Label = Nothing
     Public lblFieldInfo As Label = Nothing
+    Public txtGameHistory As TextBox = Nothing
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
@@ -213,6 +214,18 @@ Public Class clBoard
         lblFieldInfo.BorderStyle = BorderStyle.FixedSingle
 
         LogPanel.Controls.Add(lblFieldInfo)
+
+        txtGameHistory = New TextBox
+        txtGameHistory.Parent = LogPanel
+        txtGameHistory.Multiline = True
+        txtGameHistory.ScrollBars = ScrollBars.Vertical
+        txtGameHistory.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, LogPanel.Height - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
+        txtGameHistory.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_LogLabel + mdSettings.mnDefaultPos)
+        txtGameHistory.BackColor = LogPanel.BackColor
+        txtGameHistory.Font = mdSettings.mFont_Small_Regular
+        txtGameHistory.BorderStyle = BorderStyle.FixedSingle
+
+        LogPanel.Controls.Add(txtGameHistory)
 
         Dim bBrightField As Boolean = True
         For i As Integer = 0 To 9

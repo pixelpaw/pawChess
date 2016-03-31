@@ -7,6 +7,7 @@ Public Class clGameLogic
 
     Public PlayerWhite As clPlayer = Nothing
     Public PlayerBlack As clPlayer = Nothing
+    Public Log As clLog = Nothing
 
     Dim SelectedField As ucField = Nothing
     Dim CurPlayer As mdPublicEnums.enPlayerColor
@@ -18,6 +19,7 @@ Public Class clGameLogic
 
         PlayerWhite = New clPlayer(enPlayerColor.White, enPlayerType.Human)
         PlayerBlack = New clPlayer(enPlayerColor.Black, enPlayerType.Human)
+        Log = New clLog(Me)
 
         UpdatePlayer(True)
     End Sub
