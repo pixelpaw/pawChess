@@ -12,7 +12,7 @@ Public Class clBoard
     Public LogPanel As Panel = Nothing
     Public lblPlayer As Label = Nothing
     Public lblFieldInfo As Label = Nothing
-    Public txtGameHistory As TextBox = Nothing
+    Public lvHistory As ListView = Nothing
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
@@ -40,7 +40,11 @@ Public Class clBoard
         Me.ClearLog()
     End Sub
 
-    Public Function MoveFigure(ByVal strMove As String) As Boolean
+    Public Function MoveFigure(ByVal TargetField As ucField, ByVal SourceField As ucField, ByVal ChessMoveCounter As Integer) As Boolean
+        Dim strMove As String = mdTools.GetMovementString(SourceField, TargetField)
+
+        Dim nChessMove As mdPublicEnums.enChessMoveType = Nothing
+
         Dim strSourceField As String = ""
         Dim strTargetField As String = ""
         Dim strMoveType As String = ""
@@ -89,9 +93,6 @@ Public Class clBoard
                 End If
             Next i
         End If
-
-        Dim SourceField As ucField = Me.GetFieldByName(strSourceField)
-        Dim TargetField As ucField = Me.GetFieldByName(strTargetField)
 
         TargetField.Figure = SourceField.Figure
         SourceField.Figure = Nothing
@@ -149,6 +150,25 @@ Public Class clBoard
         Dim oField As ucField = CType(oLabel.Parent, ucField)
 
         RaiseEvent tmp_Field_MouseLeave(oField)
+    End Sub
+
+    Public Sub WriteLog()
+        Dim item1 As New ListViewItem("000")
+        item1.SubItems.Add(Now.ToLongTimeString())
+        item1.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.Black))
+        item1.SubItems.Add("PA1-H8")
+
+        Dim item2 As New ListViewItem("001")
+        item2.SubItems.Add(Now.ToLongTimeString())
+        item2.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.White))
+        item2.SubItems.Add("DC6xPH8")
+
+        Dim item3 As New ListViewItem("002")
+        item3.SubItems.Add(Now.ToLongTimeString())
+        item3.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.Black))
+        item3.SubItems.Add("RD2-H8")
+
+        lvHistory.Items.AddRange(New ListViewItem() {item1, item2, item3})
     End Sub
 
     Public Sub ClearLog()
@@ -215,17 +235,27 @@ Public Class clBoard
 
         LogPanel.Controls.Add(lblFieldInfo)
 
-        txtGameHistory = New TextBox
-        txtGameHistory.Parent = LogPanel
-        txtGameHistory.Multiline = True
-        txtGameHistory.ScrollBars = ScrollBars.Vertical
-        txtGameHistory.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, LogPanel.Height - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
-        txtGameHistory.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_LogLabel + mdSettings.mnDefaultPos)
-        txtGameHistory.BackColor = LogPanel.BackColor
-        txtGameHistory.Font = mdSettings.mFont_Small_Regular
-        txtGameHistory.BorderStyle = BorderStyle.FixedSingle
+        lvHistory = New ListView()
+        lvHistory.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, LogPanel.Height - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
+        lvHistory.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_LogLabel + mdSettings.mnDefaultPos)
+        'lvHistory.BackColor = LogPanel.BackColor
+        lvHistory.Font = mdSettings.mFont_Small_Regular
+        lvHistory.BorderStyle = BorderStyle.FixedSingle
+        lvHistory.HeaderStyle = ColumnHeaderStyle.None
+        lvHistory.View = View.Details
+        lvHistory.AllowColumnReorder = False
+        lvHistory.FullRowSelect = True
+        lvHistory.GridLines = True
+        lvHistory.Sorting = SortOrder.Ascending
 
-        LogPanel.Controls.Add(txtGameHistory)
+        lvHistory.Columns.Add("colMoveNr", mdSettings.mnSize_Small)
+        lvHistory.Columns.Add("colTimeStamp", 100, HorizontalAlignment.Left)
+        lvHistory.Columns.Add("colPlayerColor", -2, HorizontalAlignment.Left)
+        lvHistory.Columns.Add("colMove", -2, HorizontalAlignment.Left)
+
+        LogPanel.Controls.Add(lvHistory)
+
+        WriteLog()
 
         Dim bBrightField As Boolean = True
         For i As Integer = 0 To 9

@@ -5,6 +5,16 @@ Imports System.ComponentModel
 
 Public Module mdPublicEnums
 
+    Public Enum enChessMoveType
+        <Description("normaler Zug")> Move
+        <Description("Schlag")> Hit
+        <Description("kurze Rochade")> RochadeShort
+        <Description("lange Rochade")> RochadeLong
+        <Description("en Passant")> enPassant
+        <Description("Schach")> Chess
+        <Description("Schach Matt")> Matt
+    End Enum
+
     Public Enum enFigureMovement
         <Description("nach Unten")> PawnDown
         <Description("nach Oben")> PawnUp

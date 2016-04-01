@@ -19,7 +19,8 @@ Public Class clGameLogic
 
         PlayerWhite = New clPlayer(enPlayerColor.White, enPlayerType.Human)
         PlayerBlack = New clPlayer(enPlayerColor.Black, enPlayerType.Human)
-        Log = New clLog(Me)
+
+        Log = New clLog()
 
         UpdatePlayer(True)
     End Sub
@@ -33,43 +34,43 @@ Public Class clGameLogic
         Board.Clear()
     End Sub
 
-    Public Sub Board_Field_Click(ByVal oField As ucField) Handles Board.tmp_Field_Click
-        If oField.IsChessField _
+    Public Sub Board_Field_Click(ByVal CurrentField As ucField) Handles Board.tmp_Field_Click
+        If CurrentField.IsChessField _
             AndAlso SelectedField IsNot Nothing _
-            AndAlso (oField.GlowState = enGlowMode.Neutral Or oField.GlowState = enGlowMode.Bad) _
-            AndAlso (oField.Figure Is Nothing OrElse oField.Figure.PlayerColor <> CurPlayer) Then
+            AndAlso (CurrentField.GlowState = enGlowMode.Neutral Or CurrentField.GlowState = enGlowMode.Bad) _
+            AndAlso (CurrentField.Figure Is Nothing OrElse CurrentField.Figure.PlayerColor <> CurPlayer) Then
 
-            If Board.MoveFigure(mdTools.GetMovementString(SelectedField, oField)) Then
+            If Board.MoveFigure(CurrentField, SelectedField, Log.ChessMoveCount) Then
                 SelectedField = Nothing
                 Board.Clear()
                 UpdatePlayer()
             End If
         Else
-            If Not oField.IsChessField Then
-                DisposeSelectedField()
-
-            ElseIf oField.Figure Is Nothing Then
-                DisposeSelectedField()
-
-            ElseIf oField.Figure.PlayerColor <> CurPlayer Then
-                DisposeSelectedField()
-
-            ElseIf SelectedField Is Nothing Then
-                SelectedField = oField
-                SelectedField.GlowState = enGlowMode.Good
-
-            Else
-                If SelectedField.Index = oField.Index Then
+            If Not CurrentField.IsChessField Then
                     DisposeSelectedField()
-                    CheckMovement(oField)
-                Else
+
+                ElseIf CurrentField.Figure Is Nothing Then
                     DisposeSelectedField()
-                    CheckMovement(oField)
-                    SelectedField = oField
+
+                ElseIf CurrentField.Figure.PlayerColor <> CurPlayer Then
+                    DisposeSelectedField()
+
+                ElseIf SelectedField Is Nothing Then
+                    SelectedField = CurrentField
                     SelectedField.GlowState = enGlowMode.Good
+
+                Else
+                    If SelectedField.Index = CurrentField.Index Then
+                        DisposeSelectedField()
+                        CheckMovement(CurrentField)
+                    Else
+                        DisposeSelectedField()
+                        CheckMovement(CurrentField)
+                        SelectedField = CurrentField
+                        SelectedField.GlowState = enGlowMode.Good
+                    End If
                 End If
             End If
-        End If
     End Sub
 
     Public Sub Board_Field_MouseEnter(ByVal oField As ucField) Handles Board.tmp_Field_MouseEnter

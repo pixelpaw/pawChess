@@ -3,13 +3,37 @@ Option Explicit On
 
 Public Module mdTools
 
+    Public Function GetChessMove(ByVal nMoveNr As Integer, ByVal nMoveTyp As mdPublicEnums.enChessMoveType, ByVal nPlayerColor As mdPublicEnums.enPlayerColor, ByVal strMove As String, ByVal strIndexSourceField As String, ByVal strIndexTargetField As String) As clChessMove
+        Dim NewMove As New clChessMove()
+
+        NewMove.TimeStamp = Now()
+        NewMove.MoveNr = nMoveNr
+        NewMove.MoveTyp = nMoveTyp
+        NewMove.PlayerColor = nPlayerColor
+        NewMove.MoveString = strMove
+        NewMove.IndexSourceField = strIndexSourceField
+        NewMove.IndexTargetField = strIndexTargetField
+
+        Return NewMove
+    End Function
+
     Public Function GetMovementString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal strComment As String = "") As String
         Dim strResult As String = ""
 
         Dim strMove As String = mdSettings.mCN_Move
         If TargetField.Figure IsNot Nothing Then
             If TargetField.Figure.Figure = mdPublicEnums.enFigures.King Then
-                strMove = mdSettings.mCN_Chess
+                strMove = mdSettings.mCN_Matt
+
+            ElseIf TargetField.Figure.PlayerColor = SourceField.Figure.PlayerColor AndAlso TargetField.Figure.Figure = enFigures.Rook And SourceField.Figure.Figure = enFigures.King Then
+                If TargetField.IndexCol = 8 Then
+                    strMove = mdSettings.mCN_RochadeShort
+                ElseIf TargetField.IndexCol = 1 Then
+                    strMove = mdSettings.mCN_RochadeLong
+                End If
+
+            ElseIf 1 = 2 Then
+                ' ToDo : en Passant
             Else
                 strMove = mdSettings.mCN_Hit
             End If
