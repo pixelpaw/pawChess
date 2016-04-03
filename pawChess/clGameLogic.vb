@@ -7,7 +7,6 @@ Public Class clGameLogic
 
     Public PlayerWhite As clPlayer = Nothing
     Public PlayerBlack As clPlayer = Nothing
-    Public Log As clLog = Nothing
 
     Dim SelectedField As ucField = Nothing
     Dim CurPlayer As mdPublicEnums.enPlayerColor
@@ -19,8 +18,6 @@ Public Class clGameLogic
 
         PlayerWhite = New clPlayer(enPlayerColor.White, enPlayerType.Human)
         PlayerBlack = New clPlayer(enPlayerColor.Black, enPlayerType.Human)
-
-        Log = New clLog()
 
         UpdatePlayer(True)
     End Sub
@@ -40,7 +37,7 @@ Public Class clGameLogic
             AndAlso (CurrentField.GlowState = enGlowMode.Neutral Or CurrentField.GlowState = enGlowMode.Bad) _
             AndAlso (CurrentField.Figure Is Nothing OrElse CurrentField.Figure.PlayerColor <> CurPlayer) Then
 
-            If Board.MoveFigure(CurrentField, SelectedField, Log.ChessMoveCount) Then
+            If Board.MoveFigure(CurrentField, SelectedField) Then
                 SelectedField = Nothing
                 Board.Clear()
                 UpdatePlayer()
@@ -97,7 +94,7 @@ Public Class clGameLogic
             CurPlayer = If(CurPlayer = mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White)
         End If
 
-        Board.lblPlayer.Text = mdTools.GetEnumDescription(CurPlayer) & " am zug"
+        Board.lblPlayer.Text = mdTools.GetEnumDescription(CurPlayer) & " am Zug"
     End Sub
 
     Public Sub CheckMovement(ByVal oCurrentField As ucField)

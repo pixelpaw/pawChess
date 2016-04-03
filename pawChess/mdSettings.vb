@@ -23,7 +23,7 @@ Public Module mdSettings
 
     Public mnSize_Small As Integer = 35
     Public mnSize_Big As Integer = 75
-    Public mnSize_LogPanel As Integer = 400
+    Public mnSize_LogPanel As Integer = 300
     Public mnSize_LogLabel As Integer = 25
     Public mnSize_GamePanel As Integer = mnSize_Small * 2 + mnSize_Big * 8 + 2  ' + 2 durch die Border des InnerPanels
     Public mnSize_ClientSize_Width As Integer = mnSize_GamePanel + mnSize_LogPanel + (mnDefaultPos * 3)

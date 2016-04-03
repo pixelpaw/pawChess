@@ -9,6 +9,8 @@ Public Class clBoard
     Public WithEvents InnerPanel As Panel = Nothing
 
     ' Controls Log
+    Public Property Log As clLog = Nothing
+
     Public LogPanel As Panel = Nothing
     Public lblPlayer As Label = Nothing
     Public lblFieldInfo As Label = Nothing
@@ -28,6 +30,8 @@ Public Class clBoard
     Dim nFieldSize As Integer
 
     Public Sub New()
+        Me.Log = New clLog()
+
         Me.BackColor = Color.SaddleBrown
         Me.Size = frmMain.ClientSize
         Me.nFieldSize = mdSettings.mnSize_Big
@@ -40,64 +44,14 @@ Public Class clBoard
         Me.ClearLog()
     End Sub
 
-    Public Function MoveFigure(ByVal TargetField As ucField, ByVal SourceField As ucField, ByVal ChessMoveCounter As Integer) As Boolean
-        Dim strMove As String = mdTools.GetMovementString(SourceField, TargetField)
-
-        Dim nChessMove As mdPublicEnums.enChessMoveType = Nothing
-
-        Dim strSourceField As String = ""
-        Dim strTargetField As String = ""
-        Dim strMoveType As String = ""
-
-        strMove = strMove.Replace(mdSettings.mCN_Delimiter, "").Trim()
-
-        Dim strComment As String = ""
-        If strMove.Contains(mdSettings.mCN_CommentStart) Then
-            strComment = strMove.Substring(strMove.IndexOf(mdSettings.mCN_CommentStart), strMove.Length - strMove.IndexOf(mdSettings.mCN_CommentStart))
-            strComment = strComment.Replace(mdSettings.mCN_CommentStart, "").Replace(mdSettings.mCN_CommentEnd, "")
-
-            strMove = strMove.Substring(0, strMove.IndexOf(mdSettings.mCN_CommentStart))
-        End If
-
-        If strMove.Contains(mdSettings.mCN_RochadeShort) Or strMove.Contains(mdSettings.mCN_RochadeLong) Then
-            ' Rochade kurz / lang
-        ElseIf strMove.Contains(mdSettings.mCN_enPassant) Then
-            ' en Passant
-        ElseIf strMove.Contains(mdSettings.mCN_Matt) Then
-            strMoveType = mdSettings.mCN_Matt
-        Else
-            For i As Integer = 0 To strMove.Length - 1
-                Dim lastChar As String = If(i - 1 >= 0, strMove.Chars(i - 1), "")
-                Dim c As String = strMove.Chars(i)
-
-                ' Quell / Zielfigur-Figur
-                If i = 0 Or (lastChar = strMoveType And strMoveType = mdSettings.mCN_Hit) Then
-                    If mdTools.IsOneOf(c, mdSettings.mCN_Knight, mdSettings.mCN_Queen, mdSettings.mCN_Rook, mdSettings.mCN_Bishop, mdSettings.mCN_Knight, mdSettings.mCN_Pawn) Then
-                        Continue For
-                    End If
-                End If
-
-                ' Move-Art
-                If mdTools.IsOneOf(c, mdSettings.mCN_Move, mdSettings.mCN_Hit, mdSettings.mCN_Chess) Then
-                    strMoveType = c.ToString
-                    Continue For
-                End If
-
-                ' Feldnamen
-                If mdSettings.mstrNameSpaceH.Substring(1, mdSettings.mstrNameSpaceH.Length - 2).Contains(c) Or mdSettings.mstrNameSpaceV.Substring(1, mdSettings.mstrNameSpaceV.Length - 2).Contains(c) Then
-                    If strMoveType = "" Then
-                        strSourceField &= c.ToString
-                    Else
-                        strTargetField &= c.ToString
-                    End If
-                End If
-            Next i
-        End If
+    Public Function MoveFigure(ByVal TargetField As ucField, ByVal SourceField As ucField) As Boolean
+        Dim oMove As New clChessMove(SourceField, TargetField, Log.ChessMoveCount)
 
         TargetField.Figure = SourceField.Figure
         SourceField.Figure = Nothing
-
         TargetField.Figure.MoveCounter += 1
+
+        WriteLog(oMove)
 
         Return True
     End Function
@@ -152,23 +106,8 @@ Public Class clBoard
         RaiseEvent tmp_Field_MouseLeave(oField)
     End Sub
 
-    Public Sub WriteLog()
-        Dim item1 As New ListViewItem("000")
-        item1.SubItems.Add(Now.ToLongTimeString())
-        item1.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.Black))
-        item1.SubItems.Add("PA1-H8")
-
-        Dim item2 As New ListViewItem("001")
-        item2.SubItems.Add(Now.ToLongTimeString())
-        item2.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.White))
-        item2.SubItems.Add("DC6xPH8")
-
-        Dim item3 As New ListViewItem("002")
-        item3.SubItems.Add(Now.ToLongTimeString())
-        item3.SubItems.Add(mdTools.GetEnumDescription(mdPublicEnums.enPlayerColor.Black))
-        item3.SubItems.Add("RD2-H8")
-
-        lvHistory.Items.AddRange(New ListViewItem() {item1, item2, item3})
+    Public Sub WriteLog(ByVal oMove As clChessMove)
+        lvHistory.Items.Add(Log.Write(oMove))
     End Sub
 
     Public Sub ClearLog()
@@ -236,9 +175,9 @@ Public Class clBoard
         LogPanel.Controls.Add(lblFieldInfo)
 
         lvHistory = New ListView()
-        lvHistory.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, LogPanel.Height - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
+        lvHistory.Size = GetHistoryListViewSize(LogPanel.Height, LogPanel.Width)
         lvHistory.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_LogLabel + mdSettings.mnDefaultPos)
-        'lvHistory.BackColor = LogPanel.BackColor
+        lvHistory.BackColor = LogPanel.BackColor
         lvHistory.Font = mdSettings.mFont_Small_Regular
         lvHistory.BorderStyle = BorderStyle.FixedSingle
         lvHistory.HeaderStyle = ColumnHeaderStyle.None
@@ -249,13 +188,11 @@ Public Class clBoard
         lvHistory.Sorting = SortOrder.Ascending
 
         lvHistory.Columns.Add("colMoveNr", mdSettings.mnSize_Small)
-        lvHistory.Columns.Add("colTimeStamp", 100, HorizontalAlignment.Left)
-        lvHistory.Columns.Add("colPlayerColor", -2, HorizontalAlignment.Left)
-        lvHistory.Columns.Add("colMove", -2, HorizontalAlignment.Left)
+        lvHistory.Columns.Add("colTimeStamp", 75, HorizontalAlignment.Center)
+        lvHistory.Columns.Add("colPlayerColor", 75, HorizontalAlignment.Left)
+        lvHistory.Columns.Add("colMoveString", -2, HorizontalAlignment.Left)
 
         LogPanel.Controls.Add(lvHistory)
-
-        WriteLog()
 
         Dim bBrightField As Boolean = True
         For i As Integer = 0 To 9
@@ -430,7 +367,7 @@ Public Class clBoard
             InnerPanel.Size = New Size(nNewSize_InnerPanel, nNewSize_InnerPanel)
 
             LogPanel.Size = New Size(LogPanel.Width, nNewSize_GamePanel)
-
+            lvHistory.Size = GetHistoryListViewSize(LogPanel.Height, LogPanel.Width)
             lblFieldInfo.Location = New Point(mdSettings.mnDefaultPos, LogPanel.Size.Height - mdSettings.mnSize_LogLabel - mdSettings.mnDefaultPos - 2)
 
             Me.Size = frmMain.ClientSize

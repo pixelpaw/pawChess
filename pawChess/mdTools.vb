@@ -3,21 +3,15 @@ Option Explicit On
 
 Public Module mdTools
 
-    Public Function GetChessMove(ByVal nMoveNr As Integer, ByVal nMoveTyp As mdPublicEnums.enChessMoveType, ByVal nPlayerColor As mdPublicEnums.enPlayerColor, ByVal strMove As String, ByVal strIndexSourceField As String, ByVal strIndexTargetField As String) As clChessMove
-        Dim NewMove As New clChessMove()
+    ' Dummy-Parameter, für manche Funktionen, in denen auch auf Nothing geprüft wird (was ein erlaubter Wert ist)
+    Const cstrDummy As String = "__MISSING_PARAMETER__"
 
-        NewMove.TimeStamp = Now()
-        NewMove.MoveNr = nMoveNr
-        NewMove.MoveTyp = nMoveTyp
-        NewMove.PlayerColor = nPlayerColor
-        NewMove.MoveString = strMove
-        NewMove.IndexSourceField = strIndexSourceField
-        NewMove.IndexTargetField = strIndexTargetField
-
-        Return NewMove
+    Public Function GetHistoryListViewSize(ByVal nLogPanelHeight As Integer, ByVal nLogPanelWidth As Integer) As Size
+        Dim oResult As New Size(nLogPanelWidth - mdSettings.mnDefaultPos * 2, nLogPanelHeight - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
+        Return oResult
     End Function
 
-    Public Function GetMovementString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal strComment As String = "") As String
+    Public Function GetChessMoveString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal strComment As String = "") As String
         Dim strResult As String = ""
 
         Dim strMove As String = mdSettings.mCN_Move
@@ -92,6 +86,20 @@ Public Module mdTools
         End Select
     End Function
 
+    Public Function GetChessMoveType(ByVal strMove As String) As mdPublicEnums.enChessMoveType
+        Select Case strMove
+            Case mdSettings.mCN_RochadeLong : Return mdPublicEnums.enChessMoveType.RochadeLong
+            Case mdSettings.mCN_RochadeShort : Return mdPublicEnums.enChessMoveType.RochadeShort
+            Case mdSettings.mCN_Move : Return mdPublicEnums.enChessMoveType.Move
+            Case mdSettings.mCN_Chess : Return mdPublicEnums.enChessMoveType.Chess
+            Case mdSettings.mCN_Matt : Return mdPublicEnums.enChessMoveType.Matt
+            Case mdSettings.mCN_Remis : Return mdPublicEnums.enChessMoveType.Remis
+            Case mdSettings.mCN_enPassant : Return mdPublicEnums.enChessMoveType.enPassant
+            Case mdSettings.mCN_Hit : Return mdPublicEnums.enChessMoveType.Hit
+            Case Else : Return Nothing
+        End Select
+    End Function
+
     Public Function GetEnumDescription(ByVal EnumConstant As [Enum]) As String
         Dim fi As System.Reflection.FieldInfo = EnumConstant.GetType().GetField(EnumConstant.ToString())
         If fi Is Nothing Then Return EnumConstant.ToString()
@@ -115,13 +123,21 @@ Public Module mdTools
         End Try
     End Function
 
-    Const cstrDummy As String = "__MISSING_PARAMETER__"      ' Wir brauchen einen Dummy-Parameter, denn Nothing ist auch ein erlaubter Wert
     Public Function IsOneOf(ByVal strValue As String, Optional ByVal o0 As String = cstrDummy, Optional ByVal o1 As String = cstrDummy, Optional ByVal o2 As String = cstrDummy, Optional ByVal o3 As String = cstrDummy, Optional ByVal o4 As String = cstrDummy, Optional ByVal o5 As String = cstrDummy, Optional ByVal o6 As String = cstrDummy, Optional ByVal o7 As String = cstrDummy, Optional ByVal o8 As String = cstrDummy, Optional ByVal o9 As String = cstrDummy) As Boolean
         If strValue Is Nothing Then
             Return o0 Is Nothing OrElse o1 Is Nothing OrElse o2 Is Nothing OrElse o3 Is Nothing OrElse o4 Is Nothing OrElse o5 Is Nothing OrElse o6 Is Nothing OrElse o7 Is Nothing OrElse o8 Is Nothing OrElse o9 Is Nothing
         Else
             Return strValue.Equals(o0) OrElse strValue.Equals(o1) OrElse strValue.Equals(o2) OrElse strValue.Equals(o3) OrElse strValue.Equals(o4) OrElse strValue.Equals(o5) OrElse strValue.Equals(o6) OrElse strValue.Equals(o7) OrElse strValue.Equals(o8) OrElse strValue.Equals(o9)
         End If
+    End Function
+
+    Public Function ContainsOneOf(ByVal strValue As String, Optional ByVal arrItems As String() = Nothing) As String
+        If arrItems IsNot Nothing Then
+            For Each strItem As String In arrItems
+                If strValue.Contains(strItem) Then Return strItem
+            Next
+        End If
+        Return Nothing
     End Function
 
 End Module
