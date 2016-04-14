@@ -95,14 +95,23 @@ Public Class clChessMove
     End Function
 
     Public Function GetMoveStringText() As String
-        Dim strResult As String = ""
+        Dim strResult As New System.Text.StringBuilder()
 
-        strResult &= Me.SourceFieldName & " "
-        strResult &= mdTools.GetEnumDescription(Me.FigurePlayed) & " "
-        strResult &= mdTools.GetEnumDescription(Me.MoveType) & " nach "
-        strResult &= Me.TargetFieldName & " "
-        strResult &= If(Not IsNothing(Me.FigureHit) AndAlso Me.FigureHit > 0, mdTools.GetEnumDescription(Me.FigureHit), "")
+        strResult.Append(AddSpace(mdTools.GetEnumDescription(Me.FigurePlayed)))
+        strResult.Append(AddSpace(Me.SourceFieldName))
+        strResult.Append(AddSpace(mdTools.GetEnumDescription(Me.MoveType)))
+        strResult.Append(AddSpace("nach"))
+        strResult.Append(AddSpace(If(Not IsNothing(Me.FigureHit) AndAlso Me.FigureHit > 0, mdTools.GetEnumDescription(Me.FigureHit), "")))
+        strResult.Append(AddSpace(Me.TargetFieldName))
 
-        Return strResult
+        Return strResult.ToString
+    End Function
+
+    Public Function AddSpace(ByVal strToCheck As String) As String
+        If String.IsNullOrEmpty(strToCheck) Then
+            Return ""
+        Else
+            Return strToCheck & " "
+        End If
     End Function
 End Class

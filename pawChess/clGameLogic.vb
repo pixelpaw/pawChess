@@ -31,6 +31,20 @@ Public Class clGameLogic
         Board.Clear()
     End Sub
 
+    Public Sub Board_Log_Click(ByVal oMove As clChessMove) Handles Board.tmp_Log_Click
+
+    End Sub
+
+    Public Sub Board_Log_MouseEnter(ByVal oMove As clChessMove) Handles Board.tmp_Log_MouseEnter
+        If oMove Is Nothing Then Exit Sub
+
+        Board.lblFieldInfo.Text = "Feld " & oMove.MoveStringText
+    End Sub
+
+    Public Sub Board_Log_MouseLeave(ByVal oMove As clChessMove) Handles Board.tmp_Log_MouseLeave
+        Board.Clear()
+    End Sub
+
     Public Sub Board_Field_Click(ByVal CurrentField As ucField) Handles Board.tmp_Field_Click
         If CurrentField.IsChessField _
             AndAlso SelectedField IsNot Nothing _

@@ -23,9 +23,16 @@ Public Class clBoard
     Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
     Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
 
+    Public Delegate Sub LogClickHandler(ByVal oMove As clChessMove)
+    Public Delegate Sub LogMouseMoveHandler(ByVal oMove As clChessMove)
+
     Public Event tmp_Field_Click As FieldClickHandler
     Public Event tmp_Field_MouseEnter As FieldMouseMoveHandler
     Public Event tmp_Field_MouseLeave As FieldMouseMoveHandler
+
+    Public Event tmp_Log_Click As LogClickHandler
+    Public Event tmp_Log_MouseEnter As LogMouseMoveHandler
+    Public Event tmp_Log_MouseLeave As LogMouseMoveHandler
 
     Dim nFieldSize As Integer
 
@@ -83,6 +90,27 @@ Public Class clBoard
         For Each oPair As KeyValuePair(Of String, ucField) In colFields
             CType(oPair.Value, ucField).GlowOff()
         Next
+    End Sub
+
+    Public Sub Log_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
+        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+
+        RaiseEvent tmp_Log_Click(oMove)
+    End Sub
+
+    Public Sub Log_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
+        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+
+        RaiseEvent tmp_Log_MouseEnter(oMove)
+    End Sub
+
+    Public Sub Log_MouseLeave(ByVal sender As Object, ByVal e As EventArgs)
+        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
+        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+
+        RaiseEvent tmp_Log_MouseLeave(Nothing)
     End Sub
 
     Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -183,6 +211,7 @@ Public Class clBoard
         lvHistory.HeaderStyle = ColumnHeaderStyle.None
         lvHistory.View = View.Details
         lvHistory.AllowColumnReorder = False
+        lvHistory.MultiSelect = False
         lvHistory.FullRowSelect = True
         lvHistory.GridLines = True
         lvHistory.Sorting = SortOrder.Ascending
@@ -193,6 +222,10 @@ Public Class clBoard
         lvHistory.Columns.Add("colMoveString", -2, HorizontalAlignment.Left)
 
         LogPanel.Controls.Add(lvHistory)
+
+        AddHandler lvHistory.Click, AddressOf Log_Click
+        AddHandler lvHistory.MouseEnter, AddressOf Log_MouseEnter
+        AddHandler lvHistory.MouseLeave, AddressOf Log_MouseLeave
 
         Dim bBrightField As Boolean = True
         For i As Integer = 0 To 9

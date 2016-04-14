@@ -13,8 +13,8 @@ Public Class clLog
     End Sub
 
     Public Sub NewChessMoveEntry(ByVal oNewEntry As clChessMove)
-        ChessMoveCount += 1
         LogEntryList.Add(ChessMoveCount, oNewEntry)
+        ChessMoveCount += 1
 
         If ChessMoveCount > LogEntryList.Count Then
             MsgBox("Fehler im Log" & vbCrLf & "MoveCounter (" & ChessMoveCount.ToString & ") > LogEntryList (" & LogEntryList.Count.ToString & ")")
@@ -28,7 +28,8 @@ Public Class clLog
 
         LogItem.SubItems.Add(oMove.TimeStamp.ToLongTimeString)
         LogItem.SubItems.Add(mdTools.GetEnumDescription(oMove.PlayerColor))
-        LogItem.SubItems.Add(oMove.MoveString)
+        'LogItem.SubItems.Add(oMove.MoveString)
+        LogItem.SubItems.Add(oMove.MoveStringText)
 
         Return LogItem
     End Function
