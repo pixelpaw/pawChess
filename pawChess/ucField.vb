@@ -64,7 +64,7 @@ Public Class ucField
         InitializeComponent()
 
         Me.FieldTimer = New Timer()
-        Me.FieldTimer.Interval = 500
+        Me.FieldTimer.Interval = mdSettings.mnFieldTimerIntervall
         Me.FieldTimer.Stop()
 
         AddHandler FieldTimer.Tick, AddressOf FieldTimer_Tick

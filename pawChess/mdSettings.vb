@@ -4,6 +4,8 @@ Option Explicit On
 Imports System.ComponentModel
 Public Module mdSettings
 
+    Public mnFieldTimerIntervall As Integer = 250
+
     Public mScreenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public mScreenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
 
