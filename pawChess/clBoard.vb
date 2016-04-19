@@ -31,8 +31,7 @@ Public Class clBoard
     Public Event tmp_Field_MouseLeave As FieldMouseMoveHandler
 
     Public Event tmp_Log_Click As LogClickHandler
-    Public Event tmp_Log_MouseEnter As LogMouseMoveHandler
-    Public Event tmp_Log_MouseLeave As LogMouseMoveHandler
+    Public Event tmp_Log_MouseMove As LogMouseMoveHandler
 
     Dim nFieldSize As Integer
 
@@ -93,24 +92,25 @@ Public Class clBoard
     End Sub
 
     Public Sub Log_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
-        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+        Dim oMove As clChessMove = Nothing
+
+        If lvHistory.Items.Count > 0 AndAlso lvHistory.SelectedItems.Count > 1 Then
+            Dim oItem As ListViewItem = lvHistory.SelectedItems.Item(0)
+            oMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+        End If
 
         RaiseEvent tmp_Log_Click(oMove)
     End Sub
 
-    Public Sub Log_MouseEnter(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
-        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+    Public Sub Log_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
+        Dim oMove As clChessMove = Nothing
 
-        RaiseEvent tmp_Log_MouseEnter(oMove)
-    End Sub
+        If lvHistory.Items.Count > 0 AndAlso lvHistory.GetItemAt(e.X, e.Y) IsNot Nothing Then
+            Dim oItem As ListViewItem = lvHistory.GetItemAt(e.X, e.Y)
+            oMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
+        End If
 
-    Public Sub Log_MouseLeave(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oItem As ListViewItem = CType(CType(sender, ListView).SelectedItems.Item(0), ListViewItem)
-        Dim oMove As clChessMove = Me.Log.LogEntryList.Item(CInt(oItem.SubItems(0).Text))
-
-        RaiseEvent tmp_Log_MouseLeave(Nothing)
+        RaiseEvent tmp_Log_MouseMove(oMove)
     End Sub
 
     Public Sub Field_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -224,8 +224,7 @@ Public Class clBoard
         LogPanel.Controls.Add(lvHistory)
 
         AddHandler lvHistory.Click, AddressOf Log_Click
-        AddHandler lvHistory.MouseEnter, AddressOf Log_MouseEnter
-        AddHandler lvHistory.MouseLeave, AddressOf Log_MouseLeave
+        AddHandler lvHistory.MouseMove, AddressOf Log_MouseMove
 
         Dim bBrightField As Boolean = True
         For i As Integer = 0 To 9
@@ -295,7 +294,7 @@ Public Class clBoard
     End Sub
 
     Public Sub SetFiguresStartingPositions()
-        Dim nTestfall As Integer = 0
+        Dim nTestfall As Integer = 3
 
         ' Testfall 1
         If 1 = nTestfall Then
@@ -319,6 +318,16 @@ Public Class clBoard
 
             Me.colFields(GetFieldIndex(2, 4)).Figure = New clQueen(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(4, 4)).Figure = New clBishop(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
+
+            Exit Sub
+        End If
+
+        ' Testfall 3
+        If 3 = nTestfall Then
+            Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
+
+            Me.colFields(GetFieldIndex(4, 4)).Figure = New clRook(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
 
             Exit Sub

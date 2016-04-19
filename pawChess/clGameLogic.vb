@@ -31,18 +31,12 @@ Public Class clGameLogic
         Board.Clear()
     End Sub
 
-    Public Sub Board_Log_Click(ByVal oMove As clChessMove) Handles Board.tmp_Log_Click
-
-    End Sub
-
-    Public Sub Board_Log_MouseEnter(ByVal oMove As clChessMove) Handles Board.tmp_Log_MouseEnter
-        If oMove Is Nothing Then Exit Sub
-
-        Board.lblFieldInfo.Text = "Feld " & oMove.MoveStringText
-    End Sub
-
-    Public Sub Board_Log_MouseLeave(ByVal oMove As clChessMove) Handles Board.tmp_Log_MouseLeave
-        Board.Clear()
+    Public Sub Board_Log_Actions(ByVal oMove As clChessMove) Handles Board.tmp_Log_Click, Board.tmp_Log_MouseMove
+        If oMove Is Nothing Then
+            Board.Clear()
+        Else
+            Board.lblFieldInfo.Text = oMove.MoveStringText
+        End If
     End Sub
 
     Public Sub Board_Field_Click(ByVal CurrentField As ucField) Handles Board.tmp_Field_Click
@@ -111,7 +105,7 @@ Public Class clGameLogic
         Board.lblPlayer.Text = mdTools.GetEnumDescription(CurPlayer) & " am Zug"
     End Sub
 
-    Public Sub CheckMovement(ByVal oCurrentField As ucField)
+    Public Function CheckMovement(ByVal oCurrentField As ucField) As Boolean
         oCurrentField.GlowState = enGlowMode.Neutral
 
         Dim oFigure As clChessFigure = oCurrentField.Figure
@@ -142,7 +136,11 @@ Public Class clGameLogic
 
                     Else
                         If Rule.AllowHit Then
-                            tmpField.GlowState = enGlowMode.Bad
+                            If tmpField.Figure.Figure = enFigures.King Then
+                                tmpField.GlowState = enGlowMode.Chess
+                            Else
+                                tmpField.GlowState = enGlowMode.Bad
+                            End If
                             Exit For
                         Else
                             tmpField.GlowState = enGlowMode.Off
@@ -153,6 +151,7 @@ Public Class clGameLogic
             Next
         Next
 
-    End Sub
+        Return False
+    End Function
 
 End Class

@@ -15,6 +15,8 @@ Public Class ucField
     Public Property IndexRow As Integer
     Public Property IsChessField As Boolean = False
 
+    Public FieldTimer As Timer = Nothing
+
     Private moFigure As clChessFigure = Nothing
     Public Property Figure() As clChessFigure
         Get
@@ -39,6 +41,12 @@ Public Class ucField
             If Not (value = moGlowState) Then
                 Me.moGlowState = value
                 NotifyPropertyChanged("GlowState")
+
+                If Me.moGlowState = enGlowMode.Chess Then
+                    Me.FieldTimer.Start()
+                Else
+                    Me.FieldTimer.Stop()
+                End If
             End If
         End Set
     End Property
@@ -54,6 +62,12 @@ Public Class ucField
 
     Public Sub New(ByVal oTyp As mdPublicEnums.enFieldTyp)
         InitializeComponent()
+
+        Me.FieldTimer = New Timer()
+        Me.FieldTimer.Interval = 500
+        Me.FieldTimer.Stop()
+
+        AddHandler FieldTimer.Tick, AddressOf FieldTimer_Tick
 
         Me.FieldTyp = oTyp
 
@@ -96,6 +110,14 @@ Public Class ucField
 
     End Sub
 
+    Public Sub FieldTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+        If Me.InnerField.BackColor <> mdSettings.moColor_GlowOff Then
+            Me.InnerField.BackColor = mdSettings.moColor_GlowOff
+        Else
+            Me.InnerField.BackColor = mdSettings.moColor_GlowChess
+        End If
+    End Sub
+
     Public Sub RefreshFigure()
         If Me.Figure IsNot Nothing Then
             Me.InnerField.Text = Me.Figure.FigureID
@@ -113,6 +135,7 @@ Public Class ucField
             Case enGlowMode.Bad : Return mdSettings.moColor_GlowBad
             Case enGlowMode.Good : Return mdSettings.moColor_GlowGood
             Case enGlowMode.Neutral : Return mdSettings.moColor_GlowNeutral
+            Case enGlowMode.Chess : Return mdSettings.moColor_GlowChess
             Case enGlowMode.Off : Return mdSettings.moColor_GlowOff
         End Select
     End Function

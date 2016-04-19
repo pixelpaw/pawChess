@@ -15,6 +15,7 @@ Public Module mdSettings
     Public moColor_DarkField As Color = Color.Sienna
 
     Public moColor_GlowBad As Color = Color.FromArgb(100, Color.Red)
+    Public moColor_GlowChess As Color = Color.FromArgb(100, Color.Red)
     Public moColor_GlowGood As Color = Color.FromArgb(100, Color.LightGreen)
     Public moColor_GlowNeutral As Color = Color.FromArgb(100, Color.RoyalBlue)
     Public moColor_GlowOff As Color = Color.Transparent
