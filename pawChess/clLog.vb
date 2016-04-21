@@ -3,16 +3,16 @@ Option Explicit On
 
 Public Class clLog
 
-    Public Property LogEntryList As Generic.Dictionary(Of Integer, clChessMove)
+    Public Property LogEntryList As Generic.Dictionary(Of Integer, clMove)
     Public Property Spielstart As DateTime = Nothing
     Public Property ChessMoveCount As Integer = 0
 
     Public Sub New()
-        LogEntryList = New Generic.Dictionary(Of Integer, clChessMove)
+        LogEntryList = New Generic.Dictionary(Of Integer, clMove)
         Spielstart = Now()
     End Sub
 
-    Public Sub NewChessMoveEntry(ByVal oNewEntry As clChessMove)
+    Public Sub NewChessMoveEntry(ByVal oNewEntry As clMove)
         LogEntryList.Add(ChessMoveCount, oNewEntry)
         ChessMoveCount += 1
 
@@ -21,7 +21,7 @@ Public Class clLog
         End If
     End Sub
 
-    Public Function Write(ByVal oMove As clChessMove) As ListViewItem
+    Public Function Write(ByVal oMove As clMove) As ListViewItem
         NewChessMoveEntry(oMove)
 
         Dim LogItem As New ListViewItem(oMove.MoveNrFull)

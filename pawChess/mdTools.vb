@@ -55,6 +55,85 @@ Public Module mdTools
         Return strResult
     End Function
 
+    Public Function CheckMovement(ByVal Board As clBoard, ByVal enCurPlayer As mdPublicEnums.enPlayerColor, ByVal oField As ucField, Optional ByVal oFigure As clChessFigure = Nothing) As Boolean
+        If oFigure Is Nothing Then oFigure = oField.Figure
+
+        Dim strResult As Generic.List(Of String) = CheckMovement2(Board, enCurPlayer, oField, oFigure, True)
+
+        If strResult.Count > 0 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Function CheckMovement2(ByVal Board As clBoard, ByVal enCurPlayer As mdPublicEnums.enPlayerColor, ByVal oField As ucField, ByVal oFigure As clChessFigure, Optional ByVal bAllowGlow As Boolean = False) As Generic.List(Of String)
+        Dim lResult As New Generic.List(Of String)
+
+        oField.GlowState = enGlowMode.Neutral
+
+        If oFigure Is Nothing Then oFigure = oField.Figure
+
+        Dim nCol As Integer = oField.IndexCol
+        Dim nRow As Integer = oField.IndexRow
+
+        For Each Rule As clMoveRule In oFigure.MovementRules
+            If Rule.OnlyFirstMove And oFigure.MoveCounter > 0 Then Continue For
+
+            For i As Integer = 1 To Rule.Steps
+                nRow = oField.IndexRow + (Rule.DirectionRow * i)
+                nCol = oField.IndexCol + (Rule.DirectionCol * i)
+
+                If nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8 Then Continue For
+
+                Dim tmpField As ucField = Board.GetField(nCol, nRow)
+
+                If tmpField.Figure Is Nothing Then
+                    If Rule.OnlyOnHit Then
+                        If bAllowGlow Then tmpField.GlowState = enGlowMode.Off
+                    Else
+                        If bAllowGlow Then tmpField.GlowState = enGlowMode.Neutral
+                    End If
+                Else
+                    If tmpField.Figure.PlayerColor = enCurPlayer Then
+                        If bAllowGlow Then tmpField.GlowState = enGlowMode.Off
+                        Exit For
+
+                    Else
+                        If Rule.AllowHit Then
+                            If tmpField.Figure.Figure = enFigures.King Then
+                                If bAllowGlow Then tmpField.GlowState = enGlowMode.Chess
+                            Else
+                                If bAllowGlow Then tmpField.GlowState = enGlowMode.Bad
+                            End If
+
+                            lResult.Add(tmpField.Index)
+
+                            Exit For
+                        Else
+                            If bAllowGlow Then tmpField.GlowState = enGlowMode.Off
+                            Exit For
+                        End If
+                    End If
+                End If
+            Next
+        Next
+
+        Return lResult
+    End Function
+
+    Public Function CheckFieldForFigure(ByVal TargetField As ucField, ByVal enPlayerColor As mdPublicEnums.enPlayerColor, Optional ByVal enFigure As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure) As Boolean
+        If TargetField.Figure.Figure <> mdPublicEnums.enFigures.EmptyFigure Then
+            If TargetField.Figure.PlayerColor <> enPlayerColor Then
+                If TargetField.Figure.Figure = enFigure Or TargetField.Figure.Figure = mdPublicEnums.enFigures.EmptyFigure Then
+                    Return True
+                End If
+            End If
+        End If
+
+        Return False
+    End Function
+
     Public Function GetFigureChessNoteID(ByVal nFigure As enFigures) As String
         Select Case nFigure
             Case enFigures.King : Return mCN_King

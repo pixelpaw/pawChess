@@ -1,7 +1,7 @@
 ﻿Option Strict On
 Option Explicit On
 
-Public Class clMovementRule
+Public Class clMoveRule
 
     Public Property Description As String
     Public Property DirectionRow As Integer

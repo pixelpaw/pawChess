@@ -1,7 +1,7 @@
 ﻿Option Strict On
 Option Explicit On
 
-Public Class clChessMove
+Public Class clMove
 
     Dim mstrMoveNr As Integer
     Public Property MoveNr() As Integer
@@ -37,8 +37,8 @@ Public Class clChessMove
     End Property
 
     Public Property Comment As String
-    Public Property FigurePlayed As mdPublicEnums.enFigures = Nothing
-    Public Property FigureHit As mdPublicEnums.enFigures = Nothing
+    Public Property FigurePlayed As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure
+    Public Property FigureHit As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure
     Public Property MoveNrFull As String
     Public Property MoveType As mdPublicEnums.enChessMoveType = Nothing
     Public Property PlayerColor As mdPublicEnums.enPlayerColor = Nothing
@@ -47,15 +47,16 @@ Public Class clChessMove
     Public Property TargetFieldIndex As String
     Public Property TargetFieldName As String
     Public Property TimeStamp As DateTime
+    Public Property MoveResult As clMoveResult
 
     Public Sub New()
     End Sub
 
-    Public Sub New(ByVal SourceField As ucField, ByVal TargetField As ucField, ByVal nMoveCounter As Integer)
+    Public Sub New(ByVal SourceField As ucField, ByVal TargetField As ucField, ByVal nMoveCounter As Integer, ByVal oMoveResult As clMoveResult)
         Me.TimeStamp = Now()
         Me.MoveNr = nMoveCounter
         Me.FigurePlayed = SourceField.Figure.Figure
-        Me.FigureHit = If(IsNothing(TargetField.Figure), Nothing, TargetField.Figure.Figure)
+        Me.FigureHit = If(IsNothing(TargetField.Figure), mdPublicEnums.enFigures.EmptyFigure, TargetField.Figure.Figure)
         Me.MoveString = mdTools.GetChessMoveString(SourceField, TargetField)
         Me.SourceFieldIndex = SourceField.Index
         Me.SourceFieldName = SourceField.Name
@@ -63,6 +64,7 @@ Public Class clChessMove
         Me.TargetFieldName = TargetField.Name
         Me.PlayerColor = SourceField.Figure.PlayerColor
         Me.MoveStringText = GetMoveStringText()
+        Me.MoveResult = oMoveResult
     End Sub
 
     Private Function StringContainsComment() As Boolean

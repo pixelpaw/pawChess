@@ -18,13 +18,13 @@ Public Class clBoard
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
-    Public colChessMoves As New Generic.Dictionary(Of Integer, clChessMove)
+    Public colChessMoves As New Generic.Dictionary(Of Integer, clMove)
 
     Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
     Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
 
-    Public Delegate Sub LogClickHandler(ByVal oMove As clChessMove)
-    Public Delegate Sub LogMouseMoveHandler(ByVal oMove As clChessMove)
+    Public Delegate Sub LogClickHandler(ByVal oMove As clMove)
+    Public Delegate Sub LogMouseMoveHandler(ByVal oMove As clMove)
 
     Public Event tmp_Field_Click As FieldClickHandler
     Public Event tmp_Field_MouseEnter As FieldMouseMoveHandler
@@ -47,11 +47,12 @@ Public Class clBoard
 
     Public Sub Clear()
         Me.GlowOff()
-        Me.ClearLog()
+        lblFieldInfo.Text = ""
     End Sub
 
     Public Function MoveFigure(ByVal TargetField As ucField, ByVal SourceField As ucField) As Boolean
-        Dim oMove As New clChessMove(SourceField, TargetField, Log.ChessMoveCount)
+        Dim oMoveResult As New clMoveResult(Me, TargetField, SourceField)
+        Dim oMove As New clMove(SourceField, TargetField, Log.ChessMoveCount, oMoveResult)
 
         TargetField.Figure = SourceField.Figure
         SourceField.Figure = Nothing
@@ -92,7 +93,7 @@ Public Class clBoard
     End Sub
 
     Public Sub Log_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim oMove As clChessMove = Nothing
+        Dim oMove As clMove = Nothing
 
         If lvHistory.Items.Count > 0 AndAlso lvHistory.SelectedItems.Count > 1 Then
             Dim oItem As ListViewItem = lvHistory.SelectedItems.Item(0)
@@ -103,7 +104,7 @@ Public Class clBoard
     End Sub
 
     Public Sub Log_MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
-        Dim oMove As clChessMove = Nothing
+        Dim oMove As clMove = Nothing
 
         If lvHistory.Items.Count > 0 AndAlso lvHistory.GetItemAt(e.X, e.Y) IsNot Nothing Then
             Dim oItem As ListViewItem = lvHistory.GetItemAt(e.X, e.Y)
@@ -134,12 +135,8 @@ Public Class clBoard
         RaiseEvent tmp_Field_MouseLeave(oField)
     End Sub
 
-    Public Sub WriteLog(ByVal oMove As clChessMove)
+    Public Sub WriteLog(ByVal oMove As clMove)
         lvHistory.Items.Add(Log.Write(oMove))
-    End Sub
-
-    Public Sub ClearLog()
-        lblFieldInfo.Text = ""
     End Sub
 
     Public Sub DrawBoard()

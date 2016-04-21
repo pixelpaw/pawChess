@@ -50,6 +50,7 @@ Public Module mdPublicEnums
     End Enum
 
     Public Enum enFigures
+        <Description("keine Figur")> EmptyFigure = 0
         <Description("König")> King = 1
         <Description("Königin")> Queen = 2
         <Description("Turm")> Rook = 3

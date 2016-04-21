@@ -15,11 +15,11 @@ Public Class clBishop
         Me.MoveCounter = 0
         Me.MaxSteps = 7
 
-        Dim ListOfMovementRules As New List(Of clMovementRule)
-        ListOfMovementRules.Add(New clMovementRule("diagonal oben links", -1, -1, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("diagonal oben rechts", -1, 1, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("diagonal unten rechts", 1, 1, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("diagonal unten links", 1, -1, 7, True, False, False))
+        Dim ListOfMovementRules As New List(Of clMoveRule)
+        ListOfMovementRules.Add(New clMoveRule("diagonal oben links", -1, -1, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("diagonal oben rechts", -1, 1, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("diagonal unten rechts", 1, 1, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("diagonal unten links", 1, -1, 7, True, False, False))
 
         Me.MovementRules = ListOfMovementRules
     End Sub

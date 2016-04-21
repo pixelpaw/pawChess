@@ -15,11 +15,11 @@ Public Class clRook
         Me.MoveCounter = 0
         Me.MaxSteps = 7
 
-        Dim ListOfMovementRules As New List(Of clMovementRule)
-        ListOfMovementRules.Add(New clMovementRule("oben", -1, 0, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("rechts", 0, 1, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("unten", 1, 0, 7, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("links", 0, -1, 7, True, False, False))
+        Dim ListOfMovementRules As New List(Of clMoveRule)
+        ListOfMovementRules.Add(New clMoveRule("oben", -1, 0, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("rechts", 0, 1, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("unten", 1, 0, 7, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("links", 0, -1, 7, True, False, False))
 
         Me.MovementRules = ListOfMovementRules
     End Sub

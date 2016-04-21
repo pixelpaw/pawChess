@@ -76,10 +76,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="clChessFigure.vb" />
-    <Compile Include="clChessMove.vb" />
+    <Compile Include="clMove.vb" />
     <Compile Include="clGameLogic.vb" />
     <Compile Include="clLog.vb" />
-    <Compile Include="clMovementRule.vb" />
+    <Compile Include="clMoveRule.vb" />
+    <Compile Include="clMoveResult.vb" />
     <Compile Include="clPlayer.vb" />
     <Compile Include="Figures\clBishop.vb" />
     <Compile Include="Figures\clKing.vb" />

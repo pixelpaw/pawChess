@@ -16,18 +16,18 @@ Public Class clKnight
         Me.Movement = mdPublicEnums.enFigureMovement.Normal
         Me.MaxSteps = 1
 
-        Dim ListOfMovementRules As New List(Of clMovementRule)
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt oben links", -2, -1, 1, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt oben rechts", -2, 1, 1, True, False, False))
+        Dim ListOfMovementRules As New List(Of clMoveRule)
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt oben links", -2, -1, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt oben rechts", -2, 1, 1, True, False, False))
 
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt unten rechts", 2, 1, 1, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt unten links", 2, -1, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt unten rechts", 2, 1, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt unten links", 2, -1, 1, True, False, False))
 
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt rechts oben", -1, 2, 1, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt rechts unten", 1, 2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt rechts oben", -1, 2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt rechts unten", 1, 2, 1, True, False, False))
 
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt link oben", -1, -2, 1, True, False, False))
-        ListOfMovementRules.Add(New clMovementRule("L-Schritt links unten", 1, -2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt link oben", -1, -2, 1, True, False, False))
+        ListOfMovementRules.Add(New clMoveRule("L-Schritt links unten", 1, -2, 1, True, False, False))
 
         Me.MovementRules = ListOfMovementRules
     End Sub
