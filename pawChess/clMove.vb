@@ -40,6 +40,7 @@ Public Class clMove
     Public Property FigurePlayed As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure
     Public Property FigureHit As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure
     Public Property MoveNrFull As String
+    Public Property MoveResult As clMoveResult
     Public Property MoveType As mdPublicEnums.enChessMoveType = Nothing
     Public Property PlayerColor As mdPublicEnums.enPlayerColor = Nothing
     Public Property SourceFieldIndex As String
@@ -47,7 +48,6 @@ Public Class clMove
     Public Property TargetFieldIndex As String
     Public Property TargetFieldName As String
     Public Property TimeStamp As DateTime
-    Public Property MoveResult As clMoveResult
 
     Public Sub New()
     End Sub
@@ -55,16 +55,16 @@ Public Class clMove
     Public Sub New(ByVal SourceField As ucField, ByVal TargetField As ucField, ByVal nMoveCounter As Integer, ByVal oMoveResult As clMoveResult)
         Me.TimeStamp = Now()
         Me.MoveNr = nMoveCounter
+        Me.MoveResult = oMoveResult
         Me.FigurePlayed = SourceField.Figure.Figure
         Me.FigureHit = If(IsNothing(TargetField.Figure), mdPublicEnums.enFigures.EmptyFigure, TargetField.Figure.Figure)
-        Me.MoveString = mdTools.GetChessMoveString(SourceField, TargetField)
+        Me.MoveString = mdTools.GetChessMoveString(SourceField, TargetField, oMoveResult.Chess)
         Me.SourceFieldIndex = SourceField.Index
         Me.SourceFieldName = SourceField.Name
         Me.TargetFieldIndex = TargetField.Index
         Me.TargetFieldName = TargetField.Name
         Me.PlayerColor = SourceField.Figure.PlayerColor
         Me.MoveStringText = GetMoveStringText()
-        Me.MoveResult = oMoveResult
     End Sub
 
     Private Function StringContainsComment() As Boolean

@@ -11,25 +11,29 @@ Public Module mdTools
         Return oResult
     End Function
 
-    Public Function GetChessMoveString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal strComment As String = "") As String
+    Public Function GetChessMoveString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal bChess As Boolean = False, Optional ByVal strComment As String = "") As String
         Dim strResult As String = ""
 
         Dim strMove As String = mdSettings.mCN_Move
-        If TargetField.Figure IsNot Nothing Then
-            If TargetField.Figure.Figure = mdPublicEnums.enFigures.King Then
-                strMove = mdSettings.mCN_Matt
+        If bChess Then
+            strMove = mdSettings.mCN_Chess
+        Else
+            If TargetField.Figure IsNot Nothing Then
+                If TargetField.Figure.Figure = mdPublicEnums.enFigures.King Then
+                    strMove = mdSettings.mCN_Matt
 
-            ElseIf TargetField.Figure.PlayerColor = SourceField.Figure.PlayerColor AndAlso TargetField.Figure.Figure = enFigures.Rook And SourceField.Figure.Figure = enFigures.King Then
-                If TargetField.IndexCol = 8 Then
-                    strMove = mdSettings.mCN_RochadeShort
-                ElseIf TargetField.IndexCol = 1 Then
-                    strMove = mdSettings.mCN_RochadeLong
+                ElseIf TargetField.Figure.PlayerColor = SourceField.Figure.PlayerColor AndAlso TargetField.Figure.Figure = enFigures.Rook And SourceField.Figure.Figure = enFigures.King Then
+                    If TargetField.IndexCol = 8 Then
+                        strMove = mdSettings.mCN_RochadeShort
+                    ElseIf TargetField.IndexCol = 1 Then
+                        strMove = mdSettings.mCN_RochadeLong
+                    End If
+
+                ElseIf 1 = 2 Then
+                    ' ToDo : en Passant
+                Else
+                    strMove = mdSettings.mCN_Hit
                 End If
-
-            ElseIf 1 = 2 Then
-                ' ToDo : en Passant
-            Else
-                strMove = mdSettings.mCN_Hit
             End If
         End If
 
@@ -70,7 +74,7 @@ Public Module mdTools
     Public Function CheckMovement2(ByVal Board As clBoard, ByVal enCurPlayer As mdPublicEnums.enPlayerColor, ByVal oField As ucField, ByVal oFigure As clChessFigure, Optional ByVal bAllowGlow As Boolean = False) As Generic.List(Of String)
         Dim lResult As New Generic.List(Of String)
 
-        oField.GlowState = enGlowMode.Neutral
+        If bAllowGlow Then oField.GlowState = enGlowMode.Neutral
 
         If oFigure Is Nothing Then oFigure = oField.Figure
 
@@ -123,16 +127,41 @@ Public Module mdTools
     End Function
 
     Public Function CheckFieldForFigure(ByVal TargetField As ucField, ByVal enPlayerColor As mdPublicEnums.enPlayerColor, Optional ByVal enFigure As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure) As Boolean
-        If TargetField.Figure.Figure <> mdPublicEnums.enFigures.EmptyFigure Then
-            If TargetField.Figure.PlayerColor <> enPlayerColor Then
-                If TargetField.Figure.Figure = enFigure Or TargetField.Figure.Figure = mdPublicEnums.enFigures.EmptyFigure Then
-                    Return True
-                End If
-            End If
-        End If
+        Dim enResult As mdPublicEnums.enCheckFieldForFigureErrorCode = mdTools.CheckFieldForFigure2(TargetField, enPlayerColor, enFigure)
 
-        Return False
+        Select Case enResult
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.NoResult : Return False
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.FieldFigureIsNothing : Return False
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.EmptyFigure : Return False
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.FriendlyFigureFound : Return False
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.FigureFound : Return True
+            Case mdPublicEnums.enCheckFieldForFigureErrorCode.SearchedFigureFound : Return True
+            Case Else : Return False
+        End Select
     End Function
+
+    Public Function CheckFieldForFigure2(ByVal TargetField As ucField, ByVal enPlayerColor As mdPublicEnums.enPlayerColor, Optional ByVal enFigure As mdPublicEnums.enFigures = mdPublicEnums.enFigures.EmptyFigure) As mdPublicEnums.enCheckFieldForFigureErrorCode
+        If TargetField.Figure Is Nothing Then
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.FieldFigureIsNothing
+
+        ElseIf TargetField.Figure.Figure = mdPublicEnums.enFigures.EmptyFigure Then
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.EmptyFigure
+
+        ElseIf TargetField.Figure.PlayerColor = enPlayerColor Then
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.FriendlyFigureFound
+
+        ElseIf TargetField.Figure.Figure = enFigure Then
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.SearchedFigureFound
+
+        ElseIf TargetField.Figure.Figure <> mdPublicEnums.enFigures.EmptyFigure Then
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.FigureFound
+
+        Else
+            Return mdPublicEnums.enCheckFieldForFigureErrorCode.NoResult
+
+        End If
+    End Function
+
 
     Public Function GetFigureChessNoteID(ByVal nFigure As enFigures) As String
         Select Case nFigure

@@ -5,6 +5,15 @@ Imports System.ComponentModel
 
 Public Module mdPublicEnums
 
+    Public Enum enCheckFieldForFigureErrorCode
+        <Description("kein Ergebnis")> NoResult = 0
+        <Description("Feld hat keine Figur")> FieldFigureIsNothing = 1
+        <Description("Feld Figur ist leer")> EmptyFigure = 2
+        <Description("Freundliche Figur")> FriendlyFigureFound = 3
+        <Description("Figure gefunden")> FigureFound = 99
+        <Description("passende Figur gefunden")> SearchedFigureFound = 100
+    End Enum
+
     Public Enum enChessMoveType
         <Description("normaler Zug")> Move = 1
         <Description("Schlag")> Hit = 2

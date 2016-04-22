@@ -326,6 +326,7 @@ Public Class clBoard
 
             Me.colFields(GetFieldIndex(4, 4)).Figure = New clRook(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(6, 8)).Figure = New clBishop(enPlayerColor.Black)
 
             Exit Sub
         End If
