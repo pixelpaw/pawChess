@@ -212,7 +212,7 @@ Public Class clBoard
         lvHistory.MultiSelect = False
         lvHistory.FullRowSelect = True
         lvHistory.GridLines = True
-        lvHistory.Sorting = SortOrder.Ascending
+        lvHistory.Sorting = SortOrder.Descending
 
         lvHistory.Columns.Add("colMoveNr", mdSettings.mnSize_Small)
         lvHistory.Columns.Add("colTimeStamp", 75, HorizontalAlignment.Center)
@@ -293,7 +293,7 @@ Public Class clBoard
     End Sub
 
     Public Sub SetFiguresStartingPositions()
-        Dim nTestfall As Integer = 3
+        Dim nTestfall As Integer = 0
 
         ' Testfall 1
         If 1 = nTestfall Then

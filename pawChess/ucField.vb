@@ -137,6 +137,7 @@ Public Class ucField
             Case enGlowMode.Move : Return mdSettings.moColor_GlowNeutral
             Case enGlowMode.Chess : Return mdSettings.moColor_GlowChess
             Case enGlowMode.Off : Return mdSettings.moColor_GlowOff
+            Case enGlowMode.Special : Return mdSettings.moColor_GlowBad
         End Select
     End Function
 
