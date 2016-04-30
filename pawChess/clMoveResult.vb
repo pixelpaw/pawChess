@@ -5,8 +5,8 @@ Public Class clMoveResult
 
     Public Property Chess As Boolean
     Public Property Matt As Boolean
-    Public Property HitsInRange As Generic.List(Of String)
-    Public Property PossibleImpacts As Generic.List(Of String)
+    Public Property HitsInRange As New Generic.List(Of String)
+    Public Property PossibleImpacts As New Generic.List(Of String)
 
     Public Sub New()
 
@@ -18,9 +18,9 @@ Public Class clMoveResult
         CheckNeighbors(Board, TargetField, SourceField)
     End Sub
 
-    Private Sub CheckNeighbors(ByVal Board As clBoard, ByVal TargetField As ucField, ByVal SourceField As ucField)
+    Private Sub CheckNeighbors(ByVal Board As clBoard, ByVal oTargetField As ucField, ByVal oSourceField As ucField)
         ' Wen kann ich treffen?
-        Me.HitsInRange = mdTools.CheckMovement2(Board, SourceField.Figure.PlayerColor, TargetField, SourceField.Figure)
+        Me.HitsInRange = mdTools.CheckMovement2(Board, oTargetField, , , oSourceField, oSourceField.Figure, True)
         If Me.HitsInRange.Count > 0 Then
             For Each strFieldIndex As String In HitsInRange
                 Dim oCurField As ucField = Board.GetField(strFieldIndex)
@@ -28,17 +28,16 @@ Public Class clMoveResult
             Next
         End If
 
-
         ' Werde ich getroffen?
-        Dim enEnemyColor As mdPublicEnums.enPlayerColor = If(SourceField.Figure.PlayerColor = mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black)
+        Dim nPlayerColor As mdPublicEnums.enPlayerColor = oSourceField.Figure.PlayerColor
+        Dim nEnemyColor As mdPublicEnums.enPlayerColor = If(nPlayerColor = mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White)
 
-        For Each oPair As Generic.KeyValuePair(Of String, ucField) In Board.colFields
+        For Each oPair As Generic.KeyValuePair(Of String, ucField) In Board.colChessFields
             Dim FieldToCheck As ucField = oPair.Value
 
             If FieldToCheck IsNot Nothing Then
-                If mdTools.CheckFieldForFigure(FieldToCheck, enEnemyColor) Then
-                    Dim tmpList As New Generic.List(Of String)
-                    tmpList = mdTools.CheckMovement2(Board, enEnemyColor, FieldToCheck, FieldToCheck.Figure)
+                If mdTools.CheckFieldForFigure(FieldToCheck, nPlayerColor) Then
+                    Dim tmpList As Generic.List(Of String) = mdTools.CheckMovement2(Board, FieldToCheck, False, oTargetField)
 
                     If tmpList.Count() > 0 Then
                         For Each strTmpItem As String In tmpList

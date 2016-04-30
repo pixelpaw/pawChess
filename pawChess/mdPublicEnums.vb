@@ -41,11 +41,12 @@ Public Module mdPublicEnums
     End Enum
 
     Public Enum enGlowMode
-        <Description("schlecht - Figur schlagen")> Bad = 1
+        <Description("schlecht - Figur schlagen")> Hit = 1
         <Description("gut")> Good = 2
-        <Description("neutral - normaler Zug")> Neutral = 3
+        <Description("neutral - normaler Zug")> Move = 3
         <Description("Schach")> Chess = 4
         <Description("aus - Zug verboten")> Off = 9
+        <Description("Special - Feld gefunden")> Special = 10
     End Enum
 
     Public Enum enPlayerColor

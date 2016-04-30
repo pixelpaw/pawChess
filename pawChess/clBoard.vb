@@ -17,6 +17,7 @@ Public Class clBoard
     Public lvHistory As ListView = Nothing
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
+    Public colChessFields As New Generic.Dictionary(Of String, ucField)
     Public colFigures As New Generic.List(Of clChessFigure)
     Public colChessMoves As New Generic.Dictionary(Of Integer, clMove)
 
@@ -281,6 +282,7 @@ Public Class clBoard
                 AddHandler oNewField.InnerField.MouseLeave, AddressOf Field_MouseLeave
 
                 colFields.Add(oNewField.Index, oNewField)
+                If oNewField.IsChessField Then colChessFields.Add(oNewField.Index, oNewField)
 
                 If mdTools.IsBetween(i, 1, 8) AndAlso mdTools.IsBetween(j, 1, 8) Then bBrightField = Not bBrightField
             Next
@@ -327,6 +329,8 @@ Public Class clBoard
             Me.colFields(GetFieldIndex(4, 4)).Figure = New clRook(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(2, 6)).Figure = New clKing(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(6, 8)).Figure = New clBishop(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(6, 5)).Figure = New clKnight(enPlayerColor.Black)
+            Me.colFields(GetFieldIndex(8, 1)).Figure = New clPawn(enPlayerColor.Black)
 
             Exit Sub
         End If

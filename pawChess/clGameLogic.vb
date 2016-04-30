@@ -42,7 +42,7 @@ Public Class clGameLogic
     Public Sub Board_Field_Click(ByVal CurrentField As ucField) Handles Board.tmp_Field_Click
         If CurrentField.IsChessField _
             AndAlso SelectedField IsNot Nothing _
-            AndAlso (CurrentField.GlowState = enGlowMode.Neutral Or CurrentField.GlowState = enGlowMode.Bad) _
+            AndAlso (CurrentField.GlowState = enGlowMode.Move Or CurrentField.GlowState = enGlowMode.Hit) _
             AndAlso (CurrentField.Figure Is Nothing OrElse CurrentField.Figure.PlayerColor <> CurPlayer) Then
 
             If Board.MoveFigure(CurrentField, SelectedField) Then
@@ -67,10 +67,10 @@ Public Class clGameLogic
             Else
                 If SelectedField.Index = CurrentField.Index Then
                     DisposeSelectedField()
-                    mdTools.CheckMovement(Board, CurPlayer, CurrentField)   ' CheckMovement(CurrentField)
+                    mdTools.CheckMovement(Board, CurrentField)
                 Else
                     DisposeSelectedField()
-                    mdTools.CheckMovement(Board, CurPlayer, CurrentField)   ' CheckMovement(CurrentField)
+                    mdTools.CheckMovement(Board, CurrentField)
                     SelectedField = CurrentField
                     SelectedField.GlowState = enGlowMode.Good
                 End If
@@ -85,7 +85,7 @@ Public Class clGameLogic
             Board.lblFieldInfo.Text = "Feld " & oCurrentField.Name & " ( " & oCurrentField.Index & " ) " & If(oCurrentField.Figure IsNot Nothing, " | " & mdTools.GetEnumDescription(oCurrentField.Figure.FigureColored), "")
 
             If oCurrentField.Figure IsNot Nothing AndAlso oCurrentField.Figure.PlayerColor = CurPlayer Then
-                mdTools.CheckMovement(Board, CurPlayer, oCurrentField)   ' CheckMovement(oCurrentField)
+                mdTools.CheckMovement(Board, oCurrentField)
             End If
         End If
     End Sub

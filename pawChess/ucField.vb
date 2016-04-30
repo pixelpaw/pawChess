@@ -132,9 +132,9 @@ Public Class ucField
 
     Public Function GetGlowColor(ByVal GlowMode As mdPublicEnums.enGlowMode) As Color
         Select Case GlowMode
-            Case enGlowMode.Bad : Return mdSettings.moColor_GlowBad
+            Case enGlowMode.Hit : Return mdSettings.moColor_GlowBad
             Case enGlowMode.Good : Return mdSettings.moColor_GlowGood
-            Case enGlowMode.Neutral : Return mdSettings.moColor_GlowNeutral
+            Case enGlowMode.Move : Return mdSettings.moColor_GlowNeutral
             Case enGlowMode.Chess : Return mdSettings.moColor_GlowChess
             Case enGlowMode.Off : Return mdSettings.moColor_GlowOff
         End Select
