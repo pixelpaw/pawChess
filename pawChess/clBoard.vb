@@ -18,8 +18,8 @@ Public Class clBoard
 
     Public colFields As New Generic.Dictionary(Of String, ucField)
     Public colChessFields As New Generic.Dictionary(Of String, ucField)
-    Public colFigures As New Generic.List(Of clChessFigure)
-    Public colChessMoves As New Generic.Dictionary(Of Integer, clMove)
+    'Public colFigures As New Generic.List(Of clChessFigure)
+    'Public colChessMoves As New Generic.Dictionary(Of Integer, clMove)
 
     Public Delegate Sub FieldClickHandler(ByVal oField As ucField)
     Public Delegate Sub FieldMouseMoveHandler(ByVal oField As ucField)
@@ -44,6 +44,18 @@ Public Class clBoard
         Me.nFieldSize = mdSettings.mnSize_Big
 
         frmMain.Controls.Add(Me)
+    End Sub
+
+    Public Sub Reset()
+        For Each oPair As KeyValuePair(Of String, ucField) In colFields
+            CType(oPair.Value, ucField).Reset()
+        Next
+
+        lblFieldInfo.Text = ""
+        lblPlayer.Text = ""
+
+        Me.Log = New clLog()
+        lvHistory.Items.Clear()
     End Sub
 
     Public Sub Clear()
@@ -144,7 +156,7 @@ Public Class clBoard
         ' Schachfeld
         GamePanel = New Panel
         GamePanel.Parent = Me
-        GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
+        GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + 24)
         GamePanel.BackColor = mdSettings.moColor_GamePanel
         GamePanel.Size = New Size(mdSettings.mnSize_GamePanel, mdSettings.mnSize_GamePanel)
         GamePanel.MinimumSize = GamePanel.Size
@@ -168,7 +180,7 @@ Public Class clBoard
         ' LogPanel
         LogPanel = New Panel
         LogPanel.Parent = Me
-        LogPanel.Location = New Point(mdSettings.mnSize_GamePanel + mdSettings.mnDefaultPos * 2, mdSettings.mnDefaultPos)
+        LogPanel.Location = New Point(mdSettings.mnSize_GamePanel + mdSettings.mnDefaultPos * 2, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
         LogPanel.BackColor = mdSettings.moColor_CornerField
         LogPanel.Size = New Size(mdSettings.mnSize_LogPanel, mdSettings.mnSize_GamePanel)
         LogPanel.MinimumSize = LogPanel.Size
@@ -292,11 +304,9 @@ Public Class clBoard
 
     End Sub
 
-    Public Sub SetFiguresStartingPositions()
-        Dim nTestfall As Integer = 0
-
+    Public Sub SetFiguresStartingPositions(Optional ByVal nStartAufstellung As Integer = 0)
         ' Testfall 1
-        If 1 = nTestfall Then
+        If 1 = nStartAufstellung Then
             Me.colFields(GetFieldIndex(1, 1)).Figure = New clKnight(enPlayerColor.White)
             Me.colFields(GetFieldIndex(2, 3)).Figure = New clBishop(enPlayerColor.Black)
             Me.colFields(GetFieldIndex(5, 3)).Figure = New clRook(enPlayerColor.Black)
@@ -305,7 +315,7 @@ Public Class clBoard
         End If
 
         ' Testfall 2
-        If 2 = nTestfall Then
+        If 2 = nStartAufstellung Then
             Me.colFields(GetFieldIndex(4, 5)).Figure = New clKnight(enPlayerColor.White)
             Me.colFields(GetFieldIndex(3, 3)).Figure = New clKnight(enPlayerColor.White)
             Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
@@ -323,7 +333,7 @@ Public Class clBoard
         End If
 
         ' Testfall 3
-        If 3 = nTestfall Then
+        If 3 = nStartAufstellung Then
             Me.colFields(GetFieldIndex(8, 4)).Figure = New clRook(enPlayerColor.White)
 
             Me.colFields(GetFieldIndex(4, 4)).Figure = New clRook(enPlayerColor.Black)
@@ -387,7 +397,7 @@ Public Class clBoard
 
     Public Sub ResizeBoardControls(ByVal bIsMaximized As Boolean)
         If GamePanel IsNot Nothing AndAlso LogPanel IsNot Nothing Then
-            Dim nNewSize_GamePanel As Integer = Math.Min(Me.Parent.ClientSize.Width, Me.Parent.ClientSize.Height) - mdSettings.mnDefaultPos * 2
+            Dim nNewSize_GamePanel As Integer = Math.Min(Me.Parent.ClientSize.Width, Me.Parent.ClientSize.Height - mdSettings.mnSize_Menu_Height) - mdSettings.mnDefaultPos * 2
             Dim nNewSize_InnerPanel As Integer = nNewSize_GamePanel - mdSettings.mnSize_Small * 2
             Dim oNewFont As Font = mdSettings.mFigures_Font
 
@@ -418,12 +428,12 @@ Public Class clBoard
 
             If bIsMaximized Then
                 Dim nX1 As Integer = CInt((Me.Parent.ClientSize.Width - GamePanel.Width - LogPanel.Width - mdSettings.mnDefaultPos) / 2)
-                GamePanel.Location = New Point(nX1, mdSettings.mnDefaultPos)
+                GamePanel.Location = New Point(nX1, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
             Else
-                GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
+                GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
             End If
 
-            LogPanel.Location = New Point(GamePanel.Width + GamePanel.Location.X + mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
+            LogPanel.Location = New Point(GamePanel.Width + GamePanel.Location.X + mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
 
             For Each oPair As KeyValuePair(Of String, ucField) In colFields
                 Dim oField As ucField = GetField(oPair.Key)

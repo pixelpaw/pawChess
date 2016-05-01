@@ -4,6 +4,7 @@ Option Explicit On
 Public Class clGameLogic
 
     Public WithEvents Board As clBoard = Nothing
+    Public Options As clOptions = Nothing
 
     Public PlayerWhite As clPlayer = Nothing
     Public PlayerBlack As clPlayer = Nothing
@@ -14,12 +15,22 @@ Public Class clGameLogic
     Public Sub New()
         Board = New clBoard
         Board.DrawBoard()
-        Board.SetFiguresStartingPositions()
+    End Sub
 
-        PlayerWhite = New clPlayer(enPlayerColor.White, enPlayerType.Human)
-        PlayerBlack = New clPlayer(enPlayerColor.Black, enPlayerType.Human)
+    Public Sub NewGame(Optional ByVal nStartAufstellung As Integer = 0)
+        Board.Reset()
+        Board.SetFiguresStartingPositions(nStartAufstellung)
+
+        Options = New clOptions()
+
+        PlayerWhite = Me.Options.PlayerWhite
+        PlayerBlack = Me.Options.PlayerBlack
 
         UpdatePlayer(True)
+    End Sub
+
+    Public Sub Reset()
+        Board.Reset()
     End Sub
 
     Public Sub ResizeBoard(ByVal bIsMaximized As Boolean)
@@ -97,61 +108,12 @@ Public Class clGameLogic
 
     Public Sub UpdatePlayer(Optional ByVal bGameStart As Boolean = False)
         If bGameStart Then
-            CurPlayer = mdPublicEnums.enPlayerColor.White
+            CurPlayer = Me.Options.StartingPlayer
         Else
             CurPlayer = If(CurPlayer = mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White)
         End If
 
         Board.lblPlayer.Text = mdTools.GetEnumDescription(CurPlayer) & " am Zug"
     End Sub
-
-    'Public Function CheckMovement(ByVal oCurrentField As ucField) As Boolean
-    '    oCurrentField.GlowState = enGlowMode.Neutral
-
-    '    Dim oFigure As clChessFigure = oCurrentField.Figure
-    '    Dim nCol As Integer = oCurrentField.IndexCol
-    '    Dim nRow As Integer = oCurrentField.IndexRow
-
-    '    For Each Rule As clMoveRule In oFigure.MovementRules
-    '        If Rule.OnlyFirstMove And oFigure.MoveCounter > 0 Then Continue For
-
-    '        For i As Integer = 1 To Rule.Steps
-    '            nRow = oCurrentField.IndexRow + (Rule.DirectionRow * i)
-    '            nCol = oCurrentField.IndexCol + (Rule.DirectionCol * i)
-
-    '            If nCol < 1 Or nCol > 8 Or nRow < 1 Or nRow > 8 Then Continue For
-
-    '            Dim tmpField As ucField = Board.GetField(nCol, nRow)
-
-    '            If tmpField.Figure Is Nothing Then
-    '                If Rule.OnlyOnHit Then
-    '                    tmpField.GlowState = enGlowMode.Off
-    '                Else
-    '                    tmpField.GlowState = enGlowMode.Neutral
-    '                End If
-    '            Else
-    '                If tmpField.Figure.PlayerColor = CurPlayer Then
-    '                    tmpField.GlowState = enGlowMode.Off
-    '                    Exit For
-
-    '                Else
-    '                    If Rule.AllowHit Then
-    '                        If tmpField.Figure.Figure = enFigures.King Then
-    '                            tmpField.GlowState = enGlowMode.Chess
-    '                        Else
-    '                            tmpField.GlowState = enGlowMode.Bad
-    '                        End If
-    '                        Exit For
-    '                    Else
-    '                        tmpField.GlowState = enGlowMode.Off
-    '                        Exit For
-    '                    End If
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-
-    '    Return False
-    'End Function
 
 End Class

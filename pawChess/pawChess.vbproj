@@ -81,6 +81,7 @@
     <Compile Include="clLog.vb" />
     <Compile Include="clMoveRule.vb" />
     <Compile Include="clMoveResult.vb" />
+    <Compile Include="clOptions.vb" />
     <Compile Include="clPlayer.vb" />
     <Compile Include="Figures\clBishop.vb" />
     <Compile Include="Figures\clKing.vb" />

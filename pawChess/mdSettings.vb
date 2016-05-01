@@ -31,6 +31,7 @@ Public Module mdSettings
     Public mnSize_GamePanel As Integer = mnSize_Small * 2 + mnSize_Big * 8 + 2  ' + 2 durch die Border des InnerPanels
     Public mnSize_ClientSize_Width As Integer = mnSize_GamePanel + mnSize_LogPanel + (mnDefaultPos * 3)
     Public mnSize_ClientSize_Height As Integer = mnSize_GamePanel + (mnDefaultPos * 2)
+    Public mnSize_Menu_Height As Integer = 0
 
     Public mstrNameSpaceH As String = "0ABCDEFGH9"
     Public mstrNameSpaceV As String = "0123456789"

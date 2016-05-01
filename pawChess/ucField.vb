@@ -63,9 +63,7 @@ Public Class ucField
     Public Sub New(ByVal oTyp As mdPublicEnums.enFieldTyp)
         InitializeComponent()
 
-        Me.FieldTimer = New Timer()
-        Me.FieldTimer.Interval = mdSettings.mnFieldTimerIntervall
-        Me.FieldTimer.Stop()
+        SetupTimer()
 
         AddHandler FieldTimer.Tick, AddressOf FieldTimer_Tick
 
@@ -145,4 +143,16 @@ Public Class ucField
         Me.GlowState = enGlowMode.Off
     End Sub
 
+    Public Sub Reset()
+        Me.GlowOff()
+        Me.Figure = Nothing
+
+        SetupTimer()
+    End Sub
+
+    Private Sub SetupTimer()
+        Me.FieldTimer = New Timer()
+        Me.FieldTimer.Interval = mdSettings.mnFieldTimerIntervall
+        Me.FieldTimer.Stop()
+    End Sub
 End Class
