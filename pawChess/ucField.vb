@@ -69,25 +69,25 @@ Public Class ucField
 
         Select Case oTyp
             Case enFieldTyp.Corner
-                Me.BackColor = mdSettings.moColor_CornerField
-                Me.Size = New Size(mdSettings.mnSize_Small + 1, mdSettings.mnSize_Small + 1)
+                Me.BackColor = mdDefaultValues.moColor_CornerField
+                Me.Size = New Size(mdDefaultValues.mnSize_Small + 1, mdDefaultValues.mnSize_Small + 1)
 
             Case enFieldTyp.MapHorizontal
-                Me.BackColor = mdSettings.moColor_MapField
-                Me.Size = New Size(mdSettings.mnSize_Big, mdSettings.mnSize_Small)
+                Me.BackColor = mdDefaultValues.moColor_MapField
+                Me.Size = New Size(mdDefaultValues.mnSize_Big, mdDefaultValues.mnSize_Small)
 
             Case enFieldTyp.MapVertical
-                Me.BackColor = mdSettings.moColor_MapField
-                Me.Size = New Size(mdSettings.mnSize_Small, mdSettings.mnSize_Big)
+                Me.BackColor = mdDefaultValues.moColor_MapField
+                Me.Size = New Size(mdDefaultValues.mnSize_Small, mdDefaultValues.mnSize_Big)
 
             Case enFieldTyp.Bright
-                Me.BackColor = mdSettings.moColor_BrightField
-                Me.Size = New Size(mdSettings.mnSize_Big, mdSettings.mnSize_Big)
+                Me.BackColor = mdDefaultValues.moColor_BrightField
+                Me.Size = New Size(mdDefaultValues.mnSize_Big, mdDefaultValues.mnSize_Big)
                 Me.IsChessField = True
 
             Case enFieldTyp.Dark
-                Me.BackColor = mdSettings.moColor_DarkField
-                Me.Size = New Size(mdSettings.mnSize_Big, mdSettings.mnSize_Big)
+                Me.BackColor = mdDefaultValues.moColor_DarkField
+                Me.Size = New Size(mdDefaultValues.mnSize_Big, mdDefaultValues.mnSize_Big)
                 Me.IsChessField = True
 
         End Select
@@ -98,7 +98,7 @@ Public Class ucField
         InnerField.Size = Me.Size
         InnerField.BackColor = Color.Transparent
         InnerField.TextAlign = ContentAlignment.MiddleCenter
-        InnerField.Font = If(Me.IsChessField, mdSettings.mFigures_Font, mdSettings.mFont_Small_Bold)
+        InnerField.Font = If(Me.IsChessField, mdDefaultValues.mFigures_Font, mdDefaultValues.mFont_Small_Bold)
         InnerField.Margin = New Padding(0)
         InnerField.Padding = New Padding(6, 0, 0, 0)
 
@@ -107,10 +107,10 @@ Public Class ucField
     End Sub
 
     Public Sub FieldTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-        If Me.InnerField.BackColor <> mdSettings.moColor_GlowOff Then
-            Me.InnerField.BackColor = mdSettings.moColor_GlowOff
+        If Me.InnerField.BackColor <> mdDefaultValues.moColor_GlowOff Then
+            Me.InnerField.BackColor = mdDefaultValues.moColor_GlowOff
         Else
-            Me.InnerField.BackColor = mdSettings.moColor_GlowChess
+            Me.InnerField.BackColor = mdDefaultValues.moColor_GlowChess
         End If
     End Sub
 
@@ -128,12 +128,12 @@ Public Class ucField
 
     Public Function GetGlowColor(ByVal GlowMode As mdPublicEnums.enGlowMode) As Color
         Select Case GlowMode
-            Case enGlowMode.Hit : Return mdSettings.moColor_GlowBad
-            Case enGlowMode.Good : Return mdSettings.moColor_GlowGood
-            Case enGlowMode.Move : Return mdSettings.moColor_GlowNeutral
-            Case enGlowMode.Chess : Return mdSettings.moColor_GlowChess
-            Case enGlowMode.Off : Return mdSettings.moColor_GlowOff
-            Case enGlowMode.Special : Return mdSettings.moColor_GlowBad
+            Case enGlowMode.Hit : Return mdDefaultValues.moColor_GlowBad
+            Case enGlowMode.Good : Return mdDefaultValues.moColor_GlowGood
+            Case enGlowMode.Move : Return mdDefaultValues.moColor_GlowNeutral
+            Case enGlowMode.Chess : Return mdDefaultValues.moColor_GlowChess
+            Case enGlowMode.Off : Return mdDefaultValues.moColor_GlowOff
+            Case enGlowMode.Special : Return mdDefaultValues.moColor_GlowBad
         End Select
     End Function
 
@@ -150,7 +150,7 @@ Public Class ucField
 
     Private Sub SetupTimer()
         Me.FieldTimer = New Timer()
-        Me.FieldTimer.Interval = mdSettings.mnFieldTimerIntervall
+        Me.FieldTimer.Interval = mdDefaultValues.mnFieldTimerIntervall
         Me.FieldTimer.Enabled = True
         Me.FieldTimer.Stop()
 

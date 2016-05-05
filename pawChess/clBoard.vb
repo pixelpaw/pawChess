@@ -41,7 +41,7 @@ Public Class clBoard
 
         Me.BackColor = Color.SaddleBrown
         Me.Size = frmMain.ClientSize
-        Me.nFieldSize = mdSettings.mnSize_Big
+        Me.nFieldSize = mdDefaultValues.mnSize_Big
 
         frmMain.Controls.Add(Me)
     End Sub
@@ -156,9 +156,9 @@ Public Class clBoard
         ' Schachfeld
         GamePanel = New Panel
         GamePanel.Parent = Me
-        GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + 24)
-        GamePanel.BackColor = mdSettings.moColor_GamePanel
-        GamePanel.Size = New Size(mdSettings.mnSize_GamePanel, mdSettings.mnSize_GamePanel)
+        GamePanel.Location = New Point(mdDefaultValues.mnDefaultPos, mdDefaultValues.mnDefaultPos + 24)
+        GamePanel.BackColor = mdDefaultValues.moColor_GamePanel
+        GamePanel.Size = New Size(mdDefaultValues.mnSize_GamePanel, mdDefaultValues.mnSize_GamePanel)
         GamePanel.MinimumSize = GamePanel.Size
         GamePanel.Padding = New Padding(0)
         GamePanel.Margin = New Padding(0)
@@ -168,9 +168,9 @@ Public Class clBoard
 
         InnerPanel = New Panel
         InnerPanel.Parent = GamePanel
-        InnerPanel.Location = New Point(mdSettings.mnSize_Small, mdSettings.mnSize_Small)
-        InnerPanel.BackColor = mdSettings.moColor_InnerPanel
-        InnerPanel.Size = New Size(mdSettings.mnSize_Big * 8 + 2, mdSettings.mnSize_Big * 8 + 2)
+        InnerPanel.Location = New Point(mdDefaultValues.mnSize_Small, mdDefaultValues.mnSize_Small)
+        InnerPanel.BackColor = mdDefaultValues.moColor_InnerPanel
+        InnerPanel.Size = New Size(mdDefaultValues.mnSize_Big * 8 + 2, mdDefaultValues.mnSize_Big * 8 + 2)
         InnerPanel.Padding = New Padding(0)
         InnerPanel.Margin = New Padding(0)
         InnerPanel.BorderStyle = BorderStyle.FixedSingle
@@ -180,9 +180,9 @@ Public Class clBoard
         ' LogPanel
         LogPanel = New Panel
         LogPanel.Parent = Me
-        LogPanel.Location = New Point(mdSettings.mnSize_GamePanel + mdSettings.mnDefaultPos * 2, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
-        LogPanel.BackColor = mdSettings.moColor_CornerField
-        LogPanel.Size = New Size(mdSettings.mnSize_LogPanel, mdSettings.mnSize_GamePanel)
+        LogPanel.Location = New Point(mdDefaultValues.mnSize_GamePanel + mdDefaultValues.mnDefaultPos * 2, mdDefaultValues.mnDefaultPos + mdDefaultValues.mnSize_Menu_Height)
+        LogPanel.BackColor = mdDefaultValues.moColor_CornerField
+        LogPanel.Size = New Size(mdDefaultValues.mnSize_LogPanel, mdDefaultValues.mnSize_GamePanel)
         LogPanel.MinimumSize = LogPanel.Size
         LogPanel.Padding = New Padding(0)
         LogPanel.Margin = New Padding(0)
@@ -192,31 +192,31 @@ Public Class clBoard
 
         lblPlayer = New Label
         lblPlayer.Parent = LogPanel
-        lblPlayer.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, mdSettings.mnSize_LogLabel)
-        lblPlayer.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos)
+        lblPlayer.Size = New Size(LogPanel.Width - mdDefaultValues.mnDefaultPos * 2, mdDefaultValues.mnSize_LogLabel)
+        lblPlayer.Location = New Point(mdDefaultValues.mnDefaultPos, mdDefaultValues.mnDefaultPos)
         lblPlayer.BackColor = Color.Transparent
         lblPlayer.TextAlign = ContentAlignment.MiddleCenter
-        lblPlayer.Font = mdSettings.mFont_Small_Regular
+        lblPlayer.Font = mdDefaultValues.mFont_Small_Regular
         lblPlayer.BorderStyle = BorderStyle.FixedSingle
 
         LogPanel.Controls.Add(lblPlayer)
 
         lblFieldInfo = New Label
         lblFieldInfo.Parent = LogPanel
-        lblFieldInfo.Size = New Size(LogPanel.Width - mdSettings.mnDefaultPos * 2, mdSettings.mnSize_LogLabel)
-        lblFieldInfo.Location = New Point(mdSettings.mnDefaultPos, LogPanel.Size.Height - mdSettings.mnSize_LogLabel - mdSettings.mnDefaultPos - 2)
+        lblFieldInfo.Size = New Size(LogPanel.Width - mdDefaultValues.mnDefaultPos * 2, mdDefaultValues.mnSize_LogLabel)
+        lblFieldInfo.Location = New Point(mdDefaultValues.mnDefaultPos, LogPanel.Size.Height - mdDefaultValues.mnSize_LogLabel - mdDefaultValues.mnDefaultPos - 2)
         lblFieldInfo.BackColor = Color.Transparent
         lblFieldInfo.TextAlign = ContentAlignment.MiddleCenter
-        lblFieldInfo.Font = mdSettings.mFont_Small_Regular
+        lblFieldInfo.Font = mdDefaultValues.mFont_Small_Regular
         lblFieldInfo.BorderStyle = BorderStyle.FixedSingle
 
         LogPanel.Controls.Add(lblFieldInfo)
 
         lvHistory = New ListView()
         lvHistory.Size = GetHistoryListViewSize(LogPanel.Height, LogPanel.Width)
-        lvHistory.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_LogLabel + mdSettings.mnDefaultPos)
+        lvHistory.Location = New Point(mdDefaultValues.mnDefaultPos, mdDefaultValues.mnDefaultPos + mdDefaultValues.mnSize_LogLabel + mdDefaultValues.mnDefaultPos)
         lvHistory.BackColor = LogPanel.BackColor
-        lvHistory.Font = mdSettings.mFont_Small_Regular
+        lvHistory.Font = mdDefaultValues.mFont_Small_Regular
         lvHistory.BorderStyle = BorderStyle.FixedSingle
         lvHistory.HeaderStyle = ColumnHeaderStyle.None
         lvHistory.View = View.Details
@@ -226,7 +226,7 @@ Public Class clBoard
         lvHistory.GridLines = True
         lvHistory.Sorting = SortOrder.Descending
 
-        lvHistory.Columns.Add("colMoveNr", mdSettings.mnSize_Small)
+        lvHistory.Columns.Add("colMoveNr", mdDefaultValues.mnSize_Small)
         lvHistory.Columns.Add("colTimeStamp", 75, HorizontalAlignment.Center)
         lvHistory.Columns.Add("colPlayerColor", 75, HorizontalAlignment.Left)
         lvHistory.Columns.Add("colMoveString", -2, HorizontalAlignment.Left)
@@ -240,8 +240,8 @@ Public Class clBoard
         For i As Integer = 0 To 9
             For j As Integer = 0 To 9
                 Dim strIndex As String = GetFieldIndex(j, i)
-                Dim strNameH As String = mdSettings.mstrNameSpaceH.Substring(j, 1)
-                Dim strNameV As String = mdSettings.mstrNameSpaceV.Substring(i, 1)
+                Dim strNameH As String = mdDefaultValues.mstrNameSpaceH.Substring(j, 1)
+                Dim strNameV As String = mdDefaultValues.mstrNameSpaceV.Substring(i, 1)
                 Dim strName As String = strNameH & strNameV
 
                 Dim oTyp As mdPublicEnums.enFieldTyp = mdPublicEnums.enFieldTyp.None
@@ -269,16 +269,16 @@ Public Class clBoard
 
                 Dim nPosX, nPosY As Integer
                 If oNewField.IsChessField Then
-                    nPosX = mdSettings.mnSize_Big * Math.Max(j - 1, 0)
-                    nPosY = mdSettings.mnSize_Big * Math.Max(i - 1, 0)
+                    nPosX = mdDefaultValues.mnSize_Big * Math.Max(j - 1, 0)
+                    nPosY = mdDefaultValues.mnSize_Big * Math.Max(i - 1, 0)
 
                     oNewField.Parent = InnerPanel
                     oNewField.Location = New Point(nPosX, nPosY)
 
                     InnerPanel.Controls.Add(oNewField)
                 Else
-                    nPosX = mdSettings.mnSize_Small * If(j = 0, 0, 1) + mdSettings.mnSize_Big * Math.Max(j - 1, 0)
-                    nPosY = mdSettings.mnSize_Small * If(i = 0, 0, 1) + mdSettings.mnSize_Big * Math.Max(i - 1, 0)
+                    nPosX = mdDefaultValues.mnSize_Small * If(j = 0, 0, 1) + mdDefaultValues.mnSize_Big * Math.Max(j - 1, 0)
+                    nPosY = mdDefaultValues.mnSize_Small * If(i = 0, 0, 1) + mdDefaultValues.mnSize_Big * Math.Max(i - 1, 0)
 
                     If oTyp = enFieldTyp.MapHorizontal Then nPosX += 1
                     If oTyp = enFieldTyp.MapVertical Then nPosY += 1
@@ -397,24 +397,24 @@ Public Class clBoard
 
     Public Sub ResizeBoardControls(ByVal bIsMaximized As Boolean)
         If GamePanel IsNot Nothing AndAlso LogPanel IsNot Nothing Then
-            Dim nNewSize_GamePanel As Integer = Math.Min(Me.Parent.ClientSize.Width, Me.Parent.ClientSize.Height - mdSettings.mnSize_Menu_Height) - mdSettings.mnDefaultPos * 2
-            Dim nNewSize_InnerPanel As Integer = nNewSize_GamePanel - mdSettings.mnSize_Small * 2
-            Dim oNewFont As Font = mdSettings.mFigures_Font
+            Dim nNewSize_GamePanel As Integer = Math.Min(Me.Parent.ClientSize.Width, Me.Parent.ClientSize.Height - mdDefaultValues.mnSize_Menu_Height) - mdDefaultValues.mnDefaultPos * 2
+            Dim nNewSize_InnerPanel As Integer = nNewSize_GamePanel - mdDefaultValues.mnSize_Small * 2
+            Dim oNewFont As Font = mdDefaultValues.mFigures_Font
 
             Dim nCalc As Double = (nNewSize_InnerPanel - 2) / 8
             While Not nCalc = Int(nCalc)
                 nNewSize_GamePanel -= 1
-                nNewSize_InnerPanel = nNewSize_GamePanel - mdSettings.mnSize_Small * 2
+                nNewSize_InnerPanel = nNewSize_GamePanel - mdDefaultValues.mnSize_Small * 2
                 nCalc = (nNewSize_InnerPanel - 2) / 8
             End While
 
             If bIsMaximized Then
                 Me.nFieldSize = CInt(nCalc)
 
-                Dim nSteigerung As Double = nCalc / mdSettings.mnSize_Big * 100
-                oNewFont = New Font(mdSettings.mFigures_Font.FontFamily, CInt(mdSettings.mFigures_Font.SizeInPoints / 100 * nSteigerung))
+                Dim nSteigerung As Double = nCalc / mdDefaultValues.mnSize_Big * 100
+                oNewFont = New Font(mdDefaultValues.mFigures_Font.FontFamily, CInt(mdDefaultValues.mFigures_Font.SizeInPoints / 100 * nSteigerung))
             Else
-                Me.nFieldSize = mdSettings.mnSize_Big
+                Me.nFieldSize = mdDefaultValues.mnSize_Big
             End If
 
             GamePanel.Size = New Size(nNewSize_GamePanel, nNewSize_GamePanel)
@@ -422,18 +422,18 @@ Public Class clBoard
 
             LogPanel.Size = New Size(LogPanel.Width, nNewSize_GamePanel)
             lvHistory.Size = GetHistoryListViewSize(LogPanel.Height, LogPanel.Width)
-            lblFieldInfo.Location = New Point(mdSettings.mnDefaultPos, LogPanel.Size.Height - mdSettings.mnSize_LogLabel - mdSettings.mnDefaultPos - 2)
+            lblFieldInfo.Location = New Point(mdDefaultValues.mnDefaultPos, LogPanel.Size.Height - mdDefaultValues.mnSize_LogLabel - mdDefaultValues.mnDefaultPos - 2)
 
             Me.Size = frmMain.ClientSize
 
             If bIsMaximized Then
-                Dim nX1 As Integer = CInt((Me.Parent.ClientSize.Width - GamePanel.Width - LogPanel.Width - mdSettings.mnDefaultPos) / 2)
-                GamePanel.Location = New Point(nX1, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
+                Dim nX1 As Integer = CInt((Me.Parent.ClientSize.Width - GamePanel.Width - LogPanel.Width - mdDefaultValues.mnDefaultPos) / 2)
+                GamePanel.Location = New Point(nX1, mdDefaultValues.mnDefaultPos + mdDefaultValues.mnSize_Menu_Height)
             Else
-                GamePanel.Location = New Point(mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
+                GamePanel.Location = New Point(mdDefaultValues.mnDefaultPos, mdDefaultValues.mnDefaultPos + mdDefaultValues.mnSize_Menu_Height)
             End If
 
-            LogPanel.Location = New Point(GamePanel.Width + GamePanel.Location.X + mdSettings.mnDefaultPos, mdSettings.mnDefaultPos + mdSettings.mnSize_Menu_Height)
+            LogPanel.Location = New Point(GamePanel.Width + GamePanel.Location.X + mdDefaultValues.mnDefaultPos, mdDefaultValues.mnDefaultPos + mdDefaultValues.mnSize_Menu_Height)
 
             For Each oPair As KeyValuePair(Of String, ucField) In colFields
                 Dim oField As ucField = GetField(oPair.Key)
@@ -448,8 +448,8 @@ Public Class clBoard
                     oField.InnerField.Size = oField.Size
                     oField.InnerField.Font = oNewFont
                 Else
-                    nPosX = mdSettings.mnSize_Small * If(oField.IndexCol = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexCol - 1, 0)
-                    nPosY = mdSettings.mnSize_Small * If(oField.IndexRow = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexRow - 1, 0)
+                    nPosX = mdDefaultValues.mnSize_Small * If(oField.IndexCol = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexCol - 1, 0)
+                    nPosY = mdDefaultValues.mnSize_Small * If(oField.IndexRow = 0, 0, 1) + Me.nFieldSize * Math.Max(oField.IndexRow - 1, 0)
 
                     If oField.FieldTyp = enFieldTyp.MapHorizontal Then nPosX += 1
                     If oField.FieldTyp = enFieldTyp.MapVertical Then nPosY += 1
@@ -457,8 +457,8 @@ Public Class clBoard
                     oField.Location = New Point(nPosX, nPosY)
 
                     Select Case oField.FieldTyp
-                        Case enFieldTyp.MapHorizontal : oField.Size = New Size(Me.nFieldSize, mdSettings.mnSize_Small)
-                        Case enFieldTyp.MapVertical : oField.Size = New Size(mdSettings.mnSize_Small, Me.nFieldSize)
+                        Case enFieldTyp.MapHorizontal : oField.Size = New Size(Me.nFieldSize, mdDefaultValues.mnSize_Small)
+                        Case enFieldTyp.MapVertical : oField.Size = New Size(mdDefaultValues.mnSize_Small, Me.nFieldSize)
                     End Select
 
                     oField.InnerField.Size = oField.Size

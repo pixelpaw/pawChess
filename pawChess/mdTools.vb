@@ -4,38 +4,38 @@ Option Explicit On
 Public Module mdTools
 
     Public Function GetHistoryListViewSize(ByVal nLogPanelHeight As Integer, ByVal nLogPanelWidth As Integer) As Size
-        Dim oResult As New Size(nLogPanelWidth - mdSettings.mnDefaultPos * 2, nLogPanelHeight - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
+        Dim oResult As New Size(nLogPanelWidth - mdDefaultValues.mnDefaultPos * 2, nLogPanelHeight - (mdDefaultValues.mnSize_LogLabel * 2) - (mdDefaultValues.mnDefaultPos * 4))
         Return oResult
     End Function
 
     Public Function GetChessMoveString(ByVal SourceField As ucField, ByVal TargetField As ucField, Optional ByVal bChess As Boolean = False, Optional ByVal strComment As String = "") As String
         Dim strResult As String = ""
 
-        Dim strMove As String = mdSettings.mCN_Move
+        Dim strMove As String = mdDefaultValues.mCN_Move
         If bChess Then
-            strMove = mdSettings.mCN_Chess
+            strMove = mdDefaultValues.mCN_Chess
         Else
             If TargetField.Figure IsNot Nothing Then
                 If TargetField.Figure.Figure = mdPublicEnums.enFigures.King Then
-                    strMove = mdSettings.mCN_Matt
+                    strMove = mdDefaultValues.mCN_Matt
 
                 ElseIf TargetField.Figure.PlayerColor = SourceField.Figure.PlayerColor AndAlso TargetField.Figure.Figure = enFigures.Rook And SourceField.Figure.Figure = enFigures.King Then
                     If TargetField.IndexCol = 8 Then
-                        strMove = mdSettings.mCN_RochadeShort
+                        strMove = mdDefaultValues.mCN_RochadeShort
                     ElseIf TargetField.IndexCol = 1 Then
-                        strMove = mdSettings.mCN_RochadeLong
+                        strMove = mdDefaultValues.mCN_RochadeLong
                     End If
 
                 ElseIf 1 = 2 Then
                     ' ToDo : en Passant
                 Else
-                    strMove = mdSettings.mCN_Hit
+                    strMove = mdDefaultValues.mCN_Hit
                 End If
             End If
         End If
 
         If Not String.IsNullOrEmpty(strComment) Then
-            strComment = mdSettings.mCN_CommentStart & strComment & mdSettings.mCN_CommentEnd
+            strComment = mdDefaultValues.mCN_CommentStart & strComment & mdDefaultValues.mCN_CommentEnd
         End If
 
         Dim strSourceFigureID As String = SourceField.Figure.ChessNoteID
@@ -49,9 +49,9 @@ Public Module mdTools
         strResult &= strMove
         strResult &= strTargetFigureID
         strResult &= strTargetField
-        strResult &= mdSettings.mCN_Separator
+        strResult &= mdDefaultValues.mCN_Separator
         strResult &= strComment
-        strResult &= mdSettings.mCN_Delimiter
+        strResult &= mdDefaultValues.mCN_Delimiter
 
         Return strResult
     End Function
@@ -204,33 +204,33 @@ Public Module mdTools
 
     Public Function GetFigureUnicode(ByVal nFigure As enFiguresColored) As String
         Select Case nFigure
-            Case enFiguresColored.White_King : Return mdSettings.mstrWhite_King
-            Case enFiguresColored.White_Queen : Return mdSettings.mstrWhite_Queen
-            Case enFiguresColored.White_Rook : Return mdSettings.mstrWhite_Rook
-            Case enFiguresColored.White_Bishop : Return mdSettings.mstrWhite_Bishop
-            Case enFiguresColored.White_Knight : Return mdSettings.mstrWhite_Knight
-            Case enFiguresColored.White_Pawn : Return mdSettings.mstrWhite_Pawn
+            Case enFiguresColored.White_King : Return mdDefaultValues.mstrWhite_King
+            Case enFiguresColored.White_Queen : Return mdDefaultValues.mstrWhite_Queen
+            Case enFiguresColored.White_Rook : Return mdDefaultValues.mstrWhite_Rook
+            Case enFiguresColored.White_Bishop : Return mdDefaultValues.mstrWhite_Bishop
+            Case enFiguresColored.White_Knight : Return mdDefaultValues.mstrWhite_Knight
+            Case enFiguresColored.White_Pawn : Return mdDefaultValues.mstrWhite_Pawn
 
-            Case enFiguresColored.Black_King : Return mdSettings.mstrBlack_King
-            Case enFiguresColored.Black_Queen : Return mdSettings.mstrBlack_Queen
-            Case enFiguresColored.Black_Rook : Return mdSettings.mstrBlack_Rook
-            Case enFiguresColored.Black_Bishop : Return mdSettings.mstrBlack_Bishop
-            Case enFiguresColored.Black_Knight : Return mdSettings.mstrBlack_Knight
-            Case enFiguresColored.Black_Pawn : Return mdSettings.mstrBlack_Pawn
+            Case enFiguresColored.Black_King : Return mdDefaultValues.mstrBlack_King
+            Case enFiguresColored.Black_Queen : Return mdDefaultValues.mstrBlack_Queen
+            Case enFiguresColored.Black_Rook : Return mdDefaultValues.mstrBlack_Rook
+            Case enFiguresColored.Black_Bishop : Return mdDefaultValues.mstrBlack_Bishop
+            Case enFiguresColored.Black_Knight : Return mdDefaultValues.mstrBlack_Knight
+            Case enFiguresColored.Black_Pawn : Return mdDefaultValues.mstrBlack_Pawn
             Case Else : Return ""
         End Select
     End Function
 
     Public Function GetChessMoveType(ByVal strMove As String) As mdPublicEnums.enChessMoveType
         Select Case strMove
-            Case mdSettings.mCN_RochadeLong : Return mdPublicEnums.enChessMoveType.RochadeLong
-            Case mdSettings.mCN_RochadeShort : Return mdPublicEnums.enChessMoveType.RochadeShort
-            Case mdSettings.mCN_Move : Return mdPublicEnums.enChessMoveType.Move
-            Case mdSettings.mCN_Matt : Return mdPublicEnums.enChessMoveType.Matt
-            Case mdSettings.mCN_Chess : Return mdPublicEnums.enChessMoveType.Chess
-            Case mdSettings.mCN_Remis : Return mdPublicEnums.enChessMoveType.Remis
-            Case mdSettings.mCN_enPassant : Return mdPublicEnums.enChessMoveType.enPassant
-            Case mdSettings.mCN_Hit : Return mdPublicEnums.enChessMoveType.Hit
+            Case mdDefaultValues.mCN_RochadeLong : Return mdPublicEnums.enChessMoveType.RochadeLong
+            Case mdDefaultValues.mCN_RochadeShort : Return mdPublicEnums.enChessMoveType.RochadeShort
+            Case mdDefaultValues.mCN_Move : Return mdPublicEnums.enChessMoveType.Move
+            Case mdDefaultValues.mCN_Matt : Return mdPublicEnums.enChessMoveType.Matt
+            Case mdDefaultValues.mCN_Chess : Return mdPublicEnums.enChessMoveType.Chess
+            Case mdDefaultValues.mCN_Remis : Return mdPublicEnums.enChessMoveType.Remis
+            Case mdDefaultValues.mCN_enPassant : Return mdPublicEnums.enChessMoveType.enPassant
+            Case mdDefaultValues.mCN_Hit : Return mdPublicEnums.enChessMoveType.Hit
             Case Else : Return Nothing
         End Select
     End Function

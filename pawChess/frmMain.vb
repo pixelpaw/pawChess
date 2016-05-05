@@ -10,9 +10,9 @@ Public Class frmMain
         LoadMenu()
 
         Me.Text = "pawChess"
-        Me.ClientSize = New Size(mdSettings.mnSize_ClientSize_Width, mdSettings.mnSize_ClientSize_Height + mdSettings.mnSize_Menu_Height)
+        Me.ClientSize = New Size(mdDefaultValues.mnSize_ClientSize_Width, mdDefaultValues.mnSize_ClientSize_Height + mdDefaultValues.mnSize_Menu_Height)
         Me.FormBorderStyle = FormBorderStyle.FixedSingle
-        Me.Location = New Point(CInt((mdSettings.mScreenWidth - Me.Size.Width) / 4), CInt((mdSettings.mScreenHeight - Me.Size.Height) / 3))
+        Me.Location = New Point(CInt((mdDefaultValues.mScreenWidth - Me.Size.Width) / 4), CInt((mdDefaultValues.mScreenHeight - Me.Size.Height) / 3))
 
         InitGame()
     End Sub
@@ -95,7 +95,7 @@ Public Class frmMain
         Me.MainMenuStrip = mnuMain
         Me.Controls.Add(mnuMain)
 
-        mdSettings.mnSize_Menu_Height = mnuMain.Height
+        mdDefaultValues.mnSize_Menu_Height = mnuMain.Height
     End Sub
 
     Private Sub Menu_Click(ByVal sender As Object, ByVal e As EventArgs)

@@ -68,15 +68,15 @@ Public Class clMove
     End Sub
 
     Private Function StringContainsComment() As Boolean
-        If Not mstrMoveStringFull.Contains(mdSettings.mCN_CommentStart) Then Return False
-        If Not mstrMoveStringFull.Contains(mdSettings.mCN_CommentEnd) Then Return False
+        If Not mstrMoveStringFull.Contains(mdDefaultValues.mCN_CommentStart) Then Return False
+        If Not mstrMoveStringFull.Contains(mdDefaultValues.mCN_CommentEnd) Then Return False
         Return True
     End Function
 
     Private Function GetComment() As String
         If StringContainsComment() Then
-            Dim nStartIndex As Integer = mstrMoveStringFull.IndexOf(mdSettings.mCN_CommentStart)
-            Dim nLen As Integer = mstrMoveStringFull.IndexOf(mdSettings.mCN_CommentEnd) - mstrMoveStringFull.IndexOf(mdSettings.mCN_CommentStart)
+            Dim nStartIndex As Integer = mstrMoveStringFull.IndexOf(mdDefaultValues.mCN_CommentStart)
+            Dim nLen As Integer = mstrMoveStringFull.IndexOf(mdDefaultValues.mCN_CommentEnd) - mstrMoveStringFull.IndexOf(mdDefaultValues.mCN_CommentStart)
             Return mstrMoveStringFull.Substring(nStartIndex, nLen)
         End If
         Return ""
@@ -84,7 +84,7 @@ Public Class clMove
 
     Private Function GetMoveStringSimple() As String
         If StringContainsComment() Then
-            Return mstrMoveStringFull.Substring(0, mstrMoveStringFull.IndexOf(mdSettings.mCN_CommentStart)) & mdSettings.mCN_Delimiter
+            Return mstrMoveStringFull.Substring(0, mstrMoveStringFull.IndexOf(mdDefaultValues.mCN_CommentStart)) & mdDefaultValues.mCN_Delimiter
         Else
             Return mstrMoveStringFull
         End If
@@ -93,14 +93,14 @@ Public Class clMove
 
     Private Function GetMoveType() As mdPublicEnums.enChessMoveType
         Dim strMoves() As String = New String() {
-            mdSettings.mCN_RochadeLong,
-            mdSettings.mCN_RochadeShort,
-            mdSettings.mCN_enPassant,
-            mdSettings.mCN_Remis,
-            mdSettings.mCN_Matt,
-            mdSettings.mCN_Chess,
-            mdSettings.mCN_Hit,
-            mdSettings.mCN_Move}
+            mdDefaultValues.mCN_RochadeLong,
+            mdDefaultValues.mCN_RochadeShort,
+            mdDefaultValues.mCN_enPassant,
+            mdDefaultValues.mCN_Remis,
+            mdDefaultValues.mCN_Matt,
+            mdDefaultValues.mCN_Chess,
+            mdDefaultValues.mCN_Hit,
+            mdDefaultValues.mCN_Move}
 
         Return mdTools.GetChessMoveType(mdTools.ContainsOneOf(Me.MoveString, strMoves))
     End Function

@@ -2,7 +2,7 @@
 Option Explicit On
 
 Imports System.ComponentModel
-Public Module mdSettings
+Public Module mdDefaultValues
 
     Public mnFieldTimerIntervall As Integer = 250
 
