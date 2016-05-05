@@ -53,7 +53,7 @@ Public Class clGameLogic
     Public Sub Board_Field_Click(ByVal CurrentField As ucField) Handles Board.tmp_Field_Click
         If CurrentField.IsChessField _
             AndAlso SelectedField IsNot Nothing _
-            AndAlso (CurrentField.GlowState = enGlowMode.Move Or CurrentField.GlowState = enGlowMode.Hit) _
+            AndAlso mdTools.IsOneOf(CurrentField.GlowState, enGlowMode.Move, enGlowMode.Hit, enGlowMode.Chess) _
             AndAlso (CurrentField.Figure Is Nothing OrElse CurrentField.Figure.PlayerColor <> CurPlayer) Then
 
             If Board.MoveFigure(CurrentField, SelectedField) Then

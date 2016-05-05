@@ -65,8 +65,6 @@ Public Class ucField
 
         SetupTimer()
 
-        AddHandler FieldTimer.Tick, AddressOf FieldTimer_Tick
-
         Me.FieldTyp = oTyp
 
         Select Case oTyp
@@ -153,6 +151,9 @@ Public Class ucField
     Private Sub SetupTimer()
         Me.FieldTimer = New Timer()
         Me.FieldTimer.Interval = mdSettings.mnFieldTimerIntervall
+        Me.FieldTimer.Enabled = True
         Me.FieldTimer.Stop()
+
+        AddHandler FieldTimer.Tick, AddressOf FieldTimer_Tick
     End Sub
 End Class

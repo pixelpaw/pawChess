@@ -3,9 +3,6 @@ Option Explicit On
 
 Public Module mdTools
 
-    ' Dummy-Parameter, für manche Funktionen, in denen auch auf Nothing geprüft wird (was ein erlaubter Wert ist)
-    Const cstrDummy As String = "__MISSING_PARAMETER__"
-
     Public Function GetHistoryListViewSize(ByVal nLogPanelHeight As Integer, ByVal nLogPanelWidth As Integer) As Size
         Dim oResult As New Size(nLogPanelWidth - mdSettings.mnDefaultPos * 2, nLogPanelHeight - (mdSettings.mnSize_LogLabel * 2) - (mdSettings.mnDefaultPos * 4))
         Return oResult
@@ -229,8 +226,8 @@ Public Module mdTools
             Case mdSettings.mCN_RochadeLong : Return mdPublicEnums.enChessMoveType.RochadeLong
             Case mdSettings.mCN_RochadeShort : Return mdPublicEnums.enChessMoveType.RochadeShort
             Case mdSettings.mCN_Move : Return mdPublicEnums.enChessMoveType.Move
-            Case mdSettings.mCN_Chess : Return mdPublicEnums.enChessMoveType.Chess
             Case mdSettings.mCN_Matt : Return mdPublicEnums.enChessMoveType.Matt
+            Case mdSettings.mCN_Chess : Return mdPublicEnums.enChessMoveType.Chess
             Case mdSettings.mCN_Remis : Return mdPublicEnums.enChessMoveType.Remis
             Case mdSettings.mCN_enPassant : Return mdPublicEnums.enChessMoveType.enPassant
             Case mdSettings.mCN_Hit : Return mdPublicEnums.enChessMoveType.Hit
@@ -261,6 +258,14 @@ Public Module mdTools
         End Try
     End Function
 
+    ' Wir brauchen einen Dummy-Parameter, denn Nothing resultiert in 0
+    Const cnDummy As Integer = Integer.MaxValue
+    Public Function IsOneOf(ByVal nValue As Integer, Optional ByVal n0 As Integer = cnDummy, Optional ByVal n1 As Integer = cnDummy, Optional ByVal n2 As Integer = cnDummy, Optional ByVal n3 As Integer = cnDummy, Optional ByVal n4 As Integer = cnDummy, Optional ByVal n5 As Integer = cnDummy, Optional ByVal n6 As Integer = cnDummy, Optional ByVal n7 As Integer = cnDummy, Optional ByVal n8 As Integer = cnDummy, Optional ByVal n9 As Integer = cnDummy) As Boolean
+        Return nValue = n0 OrElse nValue = n1 OrElse nValue = n2 OrElse nValue = n3 OrElse nValue = n4 OrElse nValue = n5 OrElse nValue = n6 OrElse nValue = n7 OrElse nValue = n8 OrElse nValue = n9
+    End Function
+
+    ' Wir brauchen einen Dummy-Parameter, denn Nothing ist auch ein erlaubter Wert
+    Const cstrDummy As String = "__MISSING_PARAMETER__"
     Public Function IsOneOf(ByVal strValue As String, Optional ByVal o0 As String = cstrDummy, Optional ByVal o1 As String = cstrDummy, Optional ByVal o2 As String = cstrDummy, Optional ByVal o3 As String = cstrDummy, Optional ByVal o4 As String = cstrDummy, Optional ByVal o5 As String = cstrDummy, Optional ByVal o6 As String = cstrDummy, Optional ByVal o7 As String = cstrDummy, Optional ByVal o8 As String = cstrDummy, Optional ByVal o9 As String = cstrDummy) As Boolean
         If strValue Is Nothing Then
             Return o0 Is Nothing OrElse o1 Is Nothing OrElse o2 Is Nothing OrElse o3 Is Nothing OrElse o4 Is Nothing OrElse o5 Is Nothing OrElse o6 Is Nothing OrElse o7 Is Nothing OrElse o8 Is Nothing OrElse o9 Is Nothing

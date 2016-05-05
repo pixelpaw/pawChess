@@ -92,7 +92,16 @@ Public Class clMove
     End Function
 
     Private Function GetMoveType() As mdPublicEnums.enChessMoveType
-        Dim strMoves() As String = New String() {mdSettings.mCN_RochadeLong, mdSettings.mCN_RochadeShort, mdSettings.mCN_Move, mdSettings.mCN_Chess, mdSettings.mCN_Hit, mdSettings.mCN_Remis, mdSettings.mCN_enPassant, mdSettings.mCN_Hit}
+        Dim strMoves() As String = New String() {
+            mdSettings.mCN_RochadeLong,
+            mdSettings.mCN_RochadeShort,
+            mdSettings.mCN_enPassant,
+            mdSettings.mCN_Remis,
+            mdSettings.mCN_Matt,
+            mdSettings.mCN_Chess,
+            mdSettings.mCN_Hit,
+            mdSettings.mCN_Move}
+
         Return mdTools.GetChessMoveType(mdTools.ContainsOneOf(Me.MoveString, strMoves))
     End Function
 
