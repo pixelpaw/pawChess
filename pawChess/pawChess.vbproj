@@ -81,7 +81,6 @@
     <Compile Include="clLog.vb" />
     <Compile Include="clMoveRule.vb" />
     <Compile Include="clMoveResult.vb" />
-    <Compile Include="clOptions.vb" />
     <Compile Include="clPlayer.vb" />
     <Compile Include="clSettings.vb" />
     <Compile Include="Figures\clBishop.vb" />
@@ -95,6 +94,12 @@
     </Compile>
     <Compile Include="frmMain.Designer.vb">
       <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSettings.Designer.vb">
+      <DependentUpon>frmSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmSettings.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mdPublicEnums.vb" />

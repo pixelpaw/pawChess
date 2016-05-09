@@ -4,7 +4,7 @@ Option Explicit On
 Public Class clGameLogic
 
     Public WithEvents Board As clBoard = Nothing
-    Public Options As clOptions = Nothing
+    Public Settings As clSettings = Nothing
 
     Public PlayerWhite As clPlayer = Nothing
     Public PlayerBlack As clPlayer = Nothing
@@ -21,10 +21,10 @@ Public Class clGameLogic
         Board.Reset()
         Board.SetFiguresStartingPositions(nStartAufstellung)
 
-        Options = New clOptions()
+        Settings = New clSettings()
 
-        PlayerWhite = Me.Options.PlayerWhite
-        PlayerBlack = Me.Options.PlayerBlack
+        PlayerWhite = Me.Settings.PlayerWhite
+        PlayerBlack = Me.Settings.PlayerBlack
 
         UpdatePlayer(True)
     End Sub
@@ -108,7 +108,7 @@ Public Class clGameLogic
 
     Public Sub UpdatePlayer(Optional ByVal bGameStart As Boolean = False)
         If bGameStart Then
-            CurPlayer = Me.Options.StartingPlayer
+            CurPlayer = Me.Settings.StartingPlayer
         Else
             CurPlayer = If(CurPlayer = mdPublicEnums.enPlayerColor.White, mdPublicEnums.enPlayerColor.Black, mdPublicEnums.enPlayerColor.White)
         End If

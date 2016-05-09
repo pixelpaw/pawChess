@@ -38,16 +38,25 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub ShowSettings()
+        frmSettings.Show()
+        '        Dim frmSettings As Form2
+        'Set myFirstForm = New Form2
+        'Set mySecondForm = New Form2
+        'Set myThirdForm = New Form2
+        'myFirstForm.Show
+    End Sub
+
     Private Sub LoadMenu()
         mnuMain = New MenuStrip()
         mnuMain.Dock = DockStyle.Top
 
         ' Teil 1 - Spiel
         Dim mnuItem_Game As New ToolStripMenuItem("Spiel")
-        Dim mnuItem_Game_NewGame As New ToolStripMenuItem("Neues Spiel", Nothing, New EventHandler(AddressOf Menu_Click))
-        Dim mnuItem_Game_NewGame_Option1 As New ToolStripMenuItem("Neues Spiel - Param 1", Nothing, New EventHandler(AddressOf Menu_Click))
-        Dim mnuItem_Game_NewGame_Option2 As New ToolStripMenuItem("Neues Spiel - Param 2", Nothing, New EventHandler(AddressOf Menu_Click))
-        Dim mnuItem_Game_NewGame_Option3 As New ToolStripMenuItem("Neues Spiel - Param 3", Nothing, New EventHandler(AddressOf Menu_Click))
+        Dim mnuItem_Game_NewGame As New ToolStripMenuItem("Neues Spiel", Nothing, New EventHandler(AddressOf Menu_Click), CType(Keys.Control + Keys.N, Keys))
+        Dim mnuItem_Game_NewGame_Option1 As New ToolStripMenuItem("Neues Spiel - Param 1", Nothing, New EventHandler(AddressOf Menu_Click), CType(Keys.Control + Keys.D1, Keys))
+        Dim mnuItem_Game_NewGame_Option2 As New ToolStripMenuItem("Neues Spiel - Param 2", Nothing, New EventHandler(AddressOf Menu_Click), CType(Keys.Control + Keys.D2, Keys))
+        Dim mnuItem_Game_NewGame_Option3 As New ToolStripMenuItem("Neues Spiel - Param 3", Nothing, New EventHandler(AddressOf Menu_Click), CType(Keys.Control + Keys.D3, Keys))
         Dim mnuItem_Game_Quit As New ToolStripMenuItem("Beenden", Nothing, New EventHandler(AddressOf Menu_Click))
 
         mnuMain.Items.Add(mnuItem_Game)
@@ -65,7 +74,7 @@ Public Class frmMain
 
         ' Teil 2 - Optionen
         Dim mnuItem_Options As New ToolStripMenuItem("Optionen")
-        Dim mnuItem_Options_Settings As New ToolStripMenuItem("Einstellungen", Nothing, New EventHandler(AddressOf Menu_Click))
+        Dim mnuItem_Options_Settings As New ToolStripMenuItem("Einstellungen", Nothing, New EventHandler(AddressOf Menu_Click), Keys.F9)
 
         mnuMain.Items.Add(mnuItem_Options)
         mnuItem_Options.DropDownItems.AddRange(New ToolStripItem() {
@@ -109,9 +118,9 @@ Public Class frmMain
 
             Case "Beenden" : Me.Dispose()
 
-            Case "Einstellungen"
+            Case "Einstellungen" : Me.Game.Settings.ShowSettings()
 
-            Case "über Schach" : Process.Start("https://de.wikipedia.org/wiki/Schach")
+            Case "über Schach" : Process.Start("https: //de.wikipedia.org/wiki/Schach")
             Case "über pawChess"
         End Select
     End Sub
