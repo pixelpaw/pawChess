@@ -111,7 +111,7 @@ Public Class frmMain
 
             Case "Einstellungen" : Me.Game.Settings.ShowSettings()
 
-            Case "über Schach" : Process.Start("https: //de.wikipedia.org/wiki/Schach")
+            Case "über Schach" : Process.Start("https://de.wikipedia.org/wiki/Schach")
             Case "über pawChess"
         End Select
     End Sub
