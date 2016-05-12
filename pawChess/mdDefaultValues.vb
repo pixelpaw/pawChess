@@ -33,6 +33,11 @@ Public Module mdDefaultValues
     Public mnSize_ClientSize_Height As Integer = mnSize_GamePanel + (mnDefaultPos * 2)
     Public mnSize_Menu_Height As Integer = 0
 
+    Public mnSize_ComboBox_Width As Integer = 170
+    Public mnSize_ComboBox_Height As Integer = 21
+    Public mnSize_Label_Width As Integer = 98
+    Public mnSize_Label_Height As Integer = 21
+
     Public mstrNameSpaceH As String = "0ABCDEFGH9"
     Public mstrNameSpaceV As String = "0123456789"
 

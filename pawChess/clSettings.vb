@@ -19,6 +19,17 @@ Public Class clSettings
 
     Public Sub ShowSettings()
         'frmSettings.LoadWithSettings(Me)
+
+        Dim dr As DialogResult
+        Dim f As New frmSettings()
+
+        dr = f.ShowDialog()
+        If dr = DialogResult.OK Then
+            MsgBox("User clicked OK button")
+        ElseIf dr = DialogResult.Cancel Then
+            MsgBox("User clicked Cancel button")
+        End If
+
     End Sub
 
 End Class
