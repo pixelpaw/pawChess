@@ -38,15 +38,6 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub ShowSettings()
-        frmSettings.Show()
-        '        Dim frmSettings As Form2
-        'Set myFirstForm = New Form2
-        'Set mySecondForm = New Form2
-        'Set myThirdForm = New Form2
-        'myFirstForm.Show
-    End Sub
-
     Private Sub LoadMenu()
         mnuMain = New MenuStrip()
         mnuMain.Dock = DockStyle.Top

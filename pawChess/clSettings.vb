@@ -18,7 +18,7 @@ Public Class clSettings
     End Sub
 
     Public Sub ShowSettings()
-        frmSettings.LoadWithSettings(Me)
+        'frmSettings.LoadWithSettings(Me)
     End Sub
 
 End Class
